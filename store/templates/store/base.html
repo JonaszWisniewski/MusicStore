@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="text/JavaScript" 
+src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js">
+</script>
+    
+    <title>{% block title %}{% endblock %} | Guitar Shop</title>
+</head>
+<body>
+
+    <nav class="py-6 px-6 flex justify-between items-center border-gray-200 bg-black">
+        <a href="/" class="text-xl font-semibold text-white px-6">Guitar Shop</a>
+
+        <div class="space-x-6">
+            <a href="{% url 'cart:view_cart' %}" class="text-lg font-sdemibold hover:text-gray-500 text-white">View My Cart {% if item_count > 0 %} ({{ item_count }}) {% endif %}
+            </a>
+            <a href="{% url 'store:contact' %}" class="text-lg font-sdemibold hover:text-gray-500 text-white">Contact Us</a>
+            
+            {% if request.user.is_authenticated %} <!-- as long as user is not logged in it will show all, but once they are logged in hide sign up and login button -->
+            <a href="{% url 'users:profile' %}" class="text-lg font-sdemibold hover:text-gray-500 text-white">My Profile</a>
+            <a href="{% url 'products:new_product' %}" class="px-6 py-3 text-lg font-semibold bg-gray-500 text-white rounded-xl hover:bg-gray-700">Add Product</a>
+            <a href="{% url 'users:logout' %}" class="px-6 py-3 text-lg font-semibold bg-gray-500 text-white rounded-xl hover:bg-gray-700">Log Out</a>
+            {% else %}
+            <a href="{% url 'users:signup' %}" class="px-6 py-3 text-lg font-semibold bg-teal-500 text-white rounded-xl hover:bg-teal-700">Sign Up</a>
+            <a href="{% url 'users:login' %}" class="px-6 py-3 text-lg font-semibold bg-gray-500 text-white rounded-xl hover:bg-gray-700">Login</a>
+            
+            {% endif %}
+        </div>
+        </nav>
+    <div class="px-6 py-6">
+        {% if messages %}
+            {% for message in messages %}
+            <div class="bg-blue-100 border-t border-b border-blue-500 text-black-700 px-4 py-3" role="alert">
+                <p class="font-semibold">{{ message }}</p>
+            </div>
+            {% endfor %}
+        {% endif %}
+    {% block content %}
+
+    {% endblock %}
+    </div>
+
+  
+</body>
+
+
+</html>

@@ -1,0 +1,89 @@
+{% extends 'store/base.html' %}
+
+{% block title %} {{ title }} {% endblock %}
+
+{% block content %}
+
+<!-- <h1 class="mb-6 text-3xl">{{ title }}</h1> -->
+
+<!-- <form method="post" action="." enctype="multipart/form-data">
+    {% csrf_token %} -->
+
+<!-- <div class="w-3/5 my-6 mx-auto p-6 bg-gray-100">
+    {% for product in cart_items %}
+    <div class="grid grid-cols-8 gap-6 ">
+            <div class="col-span-2"> 
+                <img src="{{ product.product.image.url }}" class="rounded-t-xl max-w-56 max-h-56">
+            </div>
+            <div class="w-3/5 my-6 mx-auto p-6 bg-gray-100 col-span-2">
+            
+            <h1>{{ product.product.name }} ({{ product.quantity }})</h1>
+            <h1>Price in total: {{ product.product.price }}</h1>
+            <a href="{% url 'cart:remove_product_from_cart' product.id %}">Remove</a>
+            </div>
+            <h1> {{total_price}}</h1>
+            
+            
+            {% endfor %}
+        
+            </div>
+           
+    </div>
+    <h1 class="mt-5"> Subtotal  ${{total_amount}}</h1>
+</div> -->
+<!-- <div class="mt-10 px-6 py-12 bg-gray-100 rounded-xl content flex">
+    <div class="grid grid-cols-1 gap-6">
+        {% for product in cart_items %}
+        <div class="">
+            <img src="{{ product.product.image.url }}" class="rounded-t-xl max-w-56 max-h-56">
+        </div>
+
+        <div class="p-6 bg-gray rounded-b-xl max-w-56 ">
+            <h1>{{ product.product.name }} ({{ product.quantity }})</h1>
+            <h1>Price in total: {{ product.product.price }}</h1>
+            <a href="{% url 'cart:remove_product_from_cart' product.id %}">Remove</a>
+        </div>
+        {% endfor %}
+    </div>
+    <h1 class="mt-5"> Subtotal  ${{total_amount}}</h1>
+    
+</div> -->
+
+<h1 class="text-2xl text-center border-b py-1">{{ title }}</h1>
+
+
+{% for item in cart_items %}
+
+<div class="flex items-top py-6 border-b px-6">
+    
+    <a href="{% url 'products:detail' item.product.id %}">
+        
+    <img src="{{ item.product.image.url }}" class="rounded-t-xl max-w-56 max-h-56"></a>
+    
+    <div class="relative px-6">
+        <h1 class="font-bold">{{ item.product.name }}</h1>
+        <h1>Quantity: {{ item.quantity }}</h1>
+        
+        <h1 class="font-bold">Price: ${{item.product.price}} {% if item.quantity > 1 %} (${{item.sub_total}}) {% endif %}</h1>
+        <a href="{% url 'cart:remove_product_from_cart' item.product.id %}" class="absolute bottom-0 text-red-900 font-bold">Delete</a>
+
+    </div>
+    
+</div>
+   
+  {% endfor %}
+
+  
+  {% if item_count >= 1 %}
+  <h1 class="mt-5 px-6 font-medium">Click  <a href="{% url 'cart:clear_cart' %}" class="text-red-900 font-bold">HERE</a> to clear all items from the cart</h1>
+  <h1 class="mt-5 px-6 font-medium"> Subtotal ({{counter}} items:) ${{total}}</h1>
+
+  {% else %}
+
+  <h1 class="text-center text-2xl">Your basket is empty</h1>
+  {% endif %}
+  
+    
+<!-- </form> -->
+
+{% endblock %}
