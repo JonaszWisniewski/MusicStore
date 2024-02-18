@@ -32,6 +32,7 @@ LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDICT_URL = '/'
 CART_SESSION_ID = 'cart'
+SESSION_ENGINE = 'GuitarProject.session_backend'
 
 # Application definition
 
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
     'store',
     'products',
     'users',
+    'orders',
     'cart.apps.CartConfig',
 ]
 

@@ -8,6 +8,7 @@ var_class = "w-full rounded-xl py-3 px-5"
 class LoginForm(AuthenticationForm):
     class Meta:
         model = User
+      
 
 class SignUpForm(UserCreationForm):
     age = forms.CharField(max_length=4, required=True)

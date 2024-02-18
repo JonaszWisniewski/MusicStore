@@ -5,7 +5,6 @@ from users.forms import SignUpForm, UserUpdateForm, ProfileUpdateForm, PasswordF
 from .models import Profile
 from django.contrib import messages
 
-
 def sign_up(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST) # sends all information from the form
@@ -63,6 +62,6 @@ def change_password(request):
 
         form = PasswordForm(user=request.user)
     return render(request, 'users/changepassword.html', {'form': form})
+
+
     
-
-

@@ -3,6 +3,7 @@ from products.models import Product
 from .models import Cart, CartItem
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def _cart_id(request):
@@ -11,6 +12,7 @@ def _cart_id(request):
 		cart = request.session.create()
 	return cart
 
+@login_required
 def view_cart(request, total=0, counter=0, cart_items = None):
 	try:
 		cart = Cart.objects.get(cart_id=_cart_id(request))

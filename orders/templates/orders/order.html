@@ -1,0 +1,25 @@
+{% extends 'store/base.html' %}
+
+
+{% block content %}
+{% for item in cart_items %}
+
+<div class="flex items-top py-6 border-b px-6">
+    
+    <a href="{% url 'products:detail' item.product.id %}">
+        
+    <img src="{{ item.product.image.url }}" class="rounded-t-xl max-w-56 max-h-56"></a>
+    
+    <div class="relative px-6">
+        <h1 class="font-bold">{{ item.product.name }}</h1>
+        <h1>Quantity: {{ item.quantity }}</h1>
+        
+        <h1 class="font-bold">Price: ${{item.product.price}} {% if item.quantity > 1 %} (${{item.sub_total}}) {% endif %}</h1>
+
+    </div>
+    
+</div>
+   
+{% endfor %}
+
+{% endblock %}
