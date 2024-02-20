@@ -25,7 +25,8 @@ def create_order(request, total=0, cart_items=None):
                     quantity = order_items.quantity,
                     order = order_details)
                 total += (order_items.quantity * order_items.product.price)
-                order_item.save()
+                order_item.save() # saves the order
+                order_items.delete() # clears the basket that existed with items
         except ObjectDoesNotExist:
             pass
         context = {'cart_items': cart_items, 'total':total}

@@ -65,7 +65,6 @@
         <h1>Quantity: {{ item.quantity }}</h1>
         
         <h1 class="font-bold">Price: ${{item.product.price}} {% if item.quantity > 1 %} (${{item.sub_total}}) {% endif %}</h1>
-        <a href="{% url 'cart:remove_product_from_cart' item.product.id %}" class="absolute bottom-0 text-red-900 font-bold">Delete</a>
 
     </div>
     
@@ -73,19 +72,63 @@
    
 {% endfor %}
 
-<div class="px-6">
-  {% if item_count >= 1 %}
-  <h1 class="mt-5 font-medium">Click  <a href="{% url 'cart:clear_cart' %}" class="text-red-900 font-bold">HERE</a> to clear all items from the cart</h1>
-  <h1 class="mt-5 font-medium"> Subtotal ({{counter}} items:) ${{total}}</h1><br>
- 
-
-  <a href="{% url 'cart:checkout' %}" class="px-6 py-3 bg-blue-500">Checkout</a>
-
-  {% else %}
-
-  <h1 class="text-center text-2xl">Your basket is empty</h1>
+<div class="px-6 mb-5">
+  
+<h1 class="mt-5 font-medium"> Subtotal ({{counter}} items:) ${{total}}</h1>
+<a href="{% url 'orders:create_order' %}" class="text-red-900">Place an order</a>
 </div>
-  {% endif %}
+
+
+<div class="bg-gray-100 px-6 py-6">
+<h1 class="mb-6 text-3xl text-center">Basic details</h1>
+<form method="post" action="." enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="columns-2">
+
+        <div class="mb-2">
+            <label class="inline-block mb-2 mt-2 font-medium">Full Name: </label>
+            {{ profileForm.full_name }}
+        </div>
+
+
+        <div class="mb-2">
+            <label class="inline-block mb-2 mt-2 font-medium">Age: </label><br>
+            {{ profileForm.age }}
+        </div>
+
+        <div class="mb-2">
+            <label class="inline-block mb-2 mt-2 font-medium">Address 1: </label>
+            {{ profileForm.address1 }}
+        </div>
+
+        <div class="mb-2">
+            <label class="inline-block mb-2 mt-2 font-medium">Address 2: </label>
+            {{ profileForm.address2 }}
+        </div>
+
+        <div class="mb-2">
+            <label class="inline-block mb-2 mt-2 font-medium">Country: </label>
+            {{ profileForm.country }}
+        </div>
+
+        <div class="mb-2">
+            <label class="inline-block mb-2 mt-2 font-medium">City </label>
+            {{ profileForm.city }}
+        </div>
+
+        <div class="mb-2">
+            <label class="inline-block mb-2 mt-2 font-medium">County</label>
+            {{ profileForm.county }}
+        </div>
+
+        <div class="mb-2">
+            <label class="inline-block mb-2 mt-2 font-medium">Phone</label>
+            {{ profileForm.phone }}
+        </div>
+
+</div>
+<button class="py-4 mt-5 px-6 text-lg bg-teal-500">Submit</button>
+</form>
   
     
 <!-- </form> -->
