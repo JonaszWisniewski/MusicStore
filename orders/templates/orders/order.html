@@ -1,7 +1,16 @@
 {% extends 'store/base.html' %}
 
+{% block title %} {{ title }} {% endblock %}
+<script src="https://js.stripe.com/v3/"></script>
+
 
 {% block content %}
+
+
+
+<h1 class="text-2xl text-center border-b py-1">{{ title }}</h1>
+
+
 {% for item in cart_items %}
 
 <div class="flex items-top py-6 border-b px-6">
@@ -21,5 +30,76 @@
 </div>
    
 {% endfor %}
+
+<div class="px-6 mb-5">
+  
+<h1 class="mt-5 font-medium"> Subtotal ({{counter}} items:) ${{total}}</h1>
+
+</div>
+
+
+<div class="bg-gray-100 px-6 py-6">
+<h1 class="mb-6 text-3xl text-center">Basic details</h1>
+<form method="post" action="." enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="columns-2">
+
+        <div class="mb-2">
+            <label class="inline-block mb-2 mt-2 font-medium">Full Name: </label>
+            {{ profileForm.full_name }}
+        </div>
+
+
+        <div class="mb-2">
+            <label class="inline-block mb-2 mt-2 font-medium">Age: </label><br>
+            {{ profileForm.age }}
+        </div>
+
+        <div class="mb-2">
+            <label class="inline-block mb-2 mt-2 font-medium">Address 1: </label>
+            {{ profileForm.address1 }}
+        </div>
+
+        <div class="mb-2">
+            <label class="inline-block mb-2 mt-2 font-medium">Address 2: </label>
+            {{ profileForm.address2 }}
+        </div>
+
+        <div class="mb-2">
+            <label class="inline-block mb-2 mt-2 font-medium">Country: </label>
+            {{ profileForm.country }}
+        </div>
+
+        <div class="mb-2">
+            <label class="inline-block mb-2 mt-2 font-medium">City </label>
+            {{ profileForm.city }}
+        </div>
+
+        <div class="mb-2">
+            <label class="inline-block mb-2 mt-2 font-medium">County</label>
+            {{ profileForm.county }}
+        </div>
+
+        <div class="mb-2">
+            <label class="inline-block mb-2 mt-2 font-medium">Phone</label>
+            {{ profileForm.phone }}
+        </div>
+
+        {% for order in orders %}
+
+	    {% for order_item in order.get_items %}
+
+        
+
+        <!-- <a href="{% url 'payments:checkout' order_item.id %}" class="text-red-900">Checkout</a> -->
+
+        {% endfor %}
+        {% endfor %}
+</div>
+
+</form>
+  
+    
+<!-- </form> -->
 
 {% endblock %}

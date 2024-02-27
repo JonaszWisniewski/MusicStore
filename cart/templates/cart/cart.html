@@ -79,7 +79,7 @@
   <h1 class="mt-5 font-medium"> Subtotal ({{counter}} items:) ${{total}}</h1><br>
  
 
-  <a href="{% url 'cart:checkout' %}" class="px-6 py-3 bg-blue-500">Checkout</a>
+  <a href="{% url 'orders:create_order' %}" class="px-6 py-3 bg-blue-500">Place an order</a>
 
   {% else %}
 

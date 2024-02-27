@@ -49,6 +49,7 @@ def add_product_to_cart(request, product_id):
 		cart_item.save()
 	return redirect('cart:view_cart')
 
+
 def remove_product_from_cart(request, product_id):
 	cart = Cart.objects.get(cart_id=_cart_id(request))
 	product = get_object_or_404(Product, id=product_id)
@@ -60,6 +61,7 @@ def remove_product_from_cart(request, product_id):
 		cart_item.delete()
 	return redirect('cart:view_cart')
 
+
 def clear_cart(request):
 	cart = Cart.objects.get(cart_id=_cart_id(request))
 	cart_items = CartItem.objects.filter(cart=cart)
@@ -67,17 +69,18 @@ def clear_cart(request):
 		cart_item.delete()
 	return redirect('cart:view_cart')
 
-@login_required
-def checkout(request, total=0, counter=0, cart_items = None):
-	try:
-		cart = Cart.objects.get(cart_id=_cart_id(request))
-		cart_items = CartItem.objects.filter(cart=cart)
-		for cart_item in cart_items:
-			total += (cart_item.product.price * cart_item.quantity)
-			counter += cart_item.quantity
-	except ObjectDoesNotExist:
-		pass
+
+# @login_required
+# def checkout(request, total=0, counter=0, cart_items = None):
+# 	try:
+# 		cart = Cart.objects.get(cart_id=_cart_id(request))
+# 		cart_items = CartItem.objects.filter(cart=cart)
+# 		for cart_item in cart_items:
+# 			total += (cart_item.product.price * cart_item.quantity)
+# 			counter += cart_item.quantity
+# 	except ObjectDoesNotExist:
+# 		pass
 	
-	profileForm = ProfileUpdateForm(instance=request.user.profile)
-	context = {'cart_items': cart_items, 'total': total, 'counter': counter, 'title': "Checkout", 'profileForm': profileForm}
-	return render(request, 'cart/checkout.html', context)
+# 	profileForm = ProfileUpdateForm(instance=request.user.profile)
+# 	context = {'cart_items': cart_items, 'total': total, 'counter': counter, 'title': 'Checkout', 'profileForm': profileForm}
+# 	return render(request, 'cart/checkout.html', context)

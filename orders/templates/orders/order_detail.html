@@ -1,0 +1,99 @@
+{% extends 'store/base.html' %}
+
+{% block title %} {{ title }} {% endblock %}
+<script src="https://js.stripe.com/v3/"></script>
+
+
+{% block content %}
+
+
+
+<h1 class="text-2xl text-center border-b py-1">{{ title }}</h1>
+
+
+{% for item in cart_items %}
+
+<div class="flex items-top py-6 border-b px-6">
+    
+    <a href="{% url 'products:detail' item.product.id %}">
+        
+    <img src="{{ item.product.image.url }}" class="rounded-t-xl max-w-56 max-h-56"></a>
+    
+    <div class="relative px-6">
+        <h1 class="font-bold">{{ item.product.name }}</h1>
+        <h1>Quantity: {{ item.quantity }}</h1>
+        
+        <h1 class="font-bold">Price: ${{item.product.price}} {% if item.quantity > 1 %} (${{item.sub_total}}) {% endif %}</h1>
+
+    </div>
+    
+</div>
+   
+{% endfor %}
+
+<div class="px-6 mb-5">
+  
+<h1 class="mt-5 font-medium"> Subtotal ({{counter}} items:) ${{total}}</h1>
+
+</div>
+<div>
+    {% for order in order_details %}
+
+	
+
+
+    <p>Order Number: {{order.id}}</p>
+    <p>Order Date: {{order.created_date}}</p>
+    <p>Order owner: {{ order.created_by }}</p>
+    <table class="table-auto">					
+        <thead>
+        <!-- The header row-->
+            <tr>
+
+            <td>Name</td>
+            <td>Quantity</td>
+            <td>Price</td>
+            <td>Total</td>
+            <a href="{% url 'payments:checkout' order.id %}" class="text-red-900">Checkout</a>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order_item in order.get_items %}
+            <tr>
+            
+                <td>{{order_item.product}}</td>
+                <td>{{order_item.quantity}}</td>
+                <td>&euro; {{order_item.price}}</td>
+                <td>&euro; {{order_item.get_cost}}</td>	
+                <!-- <a href="{% url 'payments:checkout' order_item.id %}" class="text-red-900">Checkout</a> -->
+            </tr>
+           
+            {% endfor %}
+            <!-- End of For loop -->			
+        </tbody>
+    </table>
+    <div class="row">
+        <div class="col-md-12">
+            <p class="text-right"><strong>Order Total: &euro; 
+                            {{order.get_total_cost}}</strong></p>
+        </div>  
+    </div>
+    <p>
+
+
+
+
+<form method="post" action="." enctype="multipart/form-data">
+    {% csrf_token %}
+    
+
+{% endfor %}
+
+
+
+</form>
+  
+    
+<!-- </form> -->
+
+{% endblock %}

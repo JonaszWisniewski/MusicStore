@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'users',
     'orders',
     'cart.apps.CartConfig',
-    'payments.apps.PaymentsConfig',
+    'payments',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -130,6 +131,18 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny'
+    ]
+}
+
+STRIPE_SECRET_KEY = 'sk_test_CKtP4w59YdQBvt2i8ehXHuQw00Nt6gF5Gg'
+
+STRIPE_PUBLIC_KEY = 'pk_test_SuSizO09uXzhHy3eIoFrfssc00QMsN1DYx'
+
+STRIPE_WEBHOOK_SECRET = 'whsec_439c5066d67c327c8d658005da3fe0500aeef8ddc3d7b578640c1b9fb7f13c72'
+
 STATIC_URL = '/static/'
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -142,3 +155,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'frontend/build/static')
 ]
+
+SITE_URL = 'http://localhost:8000'
+

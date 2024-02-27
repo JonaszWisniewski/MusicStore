@@ -1,46 +1,61 @@
 {% extends 'store/base.html' %}
 
+{% block title %} {{ title }} {% endblock %}
+
 {% block content %}
-<div class="col-md-12">
+<div class="w-full my-6 bg-gray-100 mx-auto p-6 float-right">
 	
 	<!-- Start of For loop - For each p in products add a row -->
+	
+	
+
 	{% for order in order_details %}
-		<p>Order Number: {{order.id}}</p>
-		<p>Order Date: {{order.created}}</p>
-		<table class="table table-bordered table-hover table-condensed">					
+
+		<p><strong>Order Number: {{order.id}}</strong></p>
+		
+		<p>Order Date: {{order.created_date}}</p>
+		<p>Order paid: {{order.paid}}</p>
+
+		
+		
+		<table class="table-auto">					
 			<thead>
 			<!-- The header row-->
 				<tr>
-				<th>Id</th>
-				<th>Name</th>
-				<th>Quantity</th>
-				<th>Price</th>
-				<th>Total</th>
+
+				<td>Name</td>
+				<td>Quantity</td>
+				<td>Price</td>
+				<td>Total</td>
+				
+				
 				</tr>
 			</thead>
 			<tbody>
 				{% for order_item in order.get_items %}
 				<tr>
-					<td>{{order_item.id}}</td>
+				
 					<td>{{order_item.product}}</td>
 					<td>{{order_item.quantity}}</td>
-					<td>&euro; {{order_item.price}}</td>
-					<td>&euro; {{order_item.get_cost}}</td>				
+					<td>{{order_item.price}}</td>
+					<td>{{order_item.get_cost}}</td>				
 				</tr>
 				{% endfor %}
 				<!-- End of For loop -->			
 			</tbody>
 		</table>
-		<div class="row">
-			<div class="col-md-12">
-				<p class="text-right"><strong>Order Total: &euro; 
+		
+				<p><strong>Order Total: &euro; 
                                 {{order.get_total_cost}}</strong></p>
-			</div>  
-        </div>
+			
+        
         <p>
-            <a href="{% url 'orders:cancel_order' order.id %}"><button class="btn btn-primary">Cancel Order</button></a>
+            <a href="{% url 'orders:cancel_order' order.id %}"><button class="btn btn-primary bg-red-500 mt-4 mb-6 py-2 px-2">Cancel Order</button></a>
+			<a href="{% url 'orders:detail' order.id %}"><button class="btn btn-primary bg-green-500 mt-4 mb-6 py-2 px-2">View Detail</button></a>
         </p>
 	{% endfor %}
 </div>
+
+
 {% endblock content %}
 

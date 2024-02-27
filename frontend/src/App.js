@@ -1,12 +1,12 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { Route, BrowserRouter as Router } from 'react-router-dom';
 
-function App() {
-  return (
-    <div className="App">
-      <h1>AYY</h1>
-    </div>
-  );
-}
+import HomePage from './HomePage';
+
+const App = () => (
+	<Router>
+		<Route path='/' component={HomePage} />
+	</Router>
+);
 
 export default App;
