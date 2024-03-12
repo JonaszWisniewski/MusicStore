@@ -90,10 +90,10 @@ def stripe_webhook(request):
                 
                 order_id = session["metadata"]["order_id"]
                 
-                
                 order_details = Order.objects.get(id=order_id)
                 print(order_details)
                 order_details.paid = True
+           
                 order_details.save()
                 line_items = session.line_items
                 # Fulfill the purchase...

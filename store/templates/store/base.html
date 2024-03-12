@@ -16,7 +16,6 @@ src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js">
         <a href="/" class="text-xl font-semibold text-white px-6">Guitar Shop</a>
 
         <div class="space-x-6">
-            <a href="{% url 'orders:create_order' %}" class="text-lg font-sdemibold hover:text-gray-500 text-white">Create order</a>
             <a href="{% url 'orders:order_history' %}" class="text-lg font-sdemibold hover:text-gray-500 text-white">Order history</a>
             <a href="{% url 'cart:view_cart' %}" class="text-lg font-sdemibold hover:text-gray-500 text-white">View My Cart {% if item_count > 0 %} ({{ item_count }}) {% endif %}
             </a>

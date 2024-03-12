@@ -11,47 +11,52 @@
 
 	{% for order in order_details %}
 
-		<p><strong>Order Number: {{order.id}}</strong></p>
+		<!-- <p><strong>Order Number: {{order.id}}</strong></p> -->
 		
-		<p>Order Date: {{order.created_date}}</p>
-		<p>Order paid: {{order.paid}}</p>
+		<!-- <p>Order Date: {{order.created_date}}</p> -->
+		<!-- <p>Order paid: {{order.paid}}</p> -->
 
-		
-		
-		<table class="table-auto">					
-			<thead>
+		<table class="w-full table-fixed border-b-2 border-gray-900 mt-4">					
+			<thead class="font-bold">
 			<!-- The header row-->
 				<tr>
-
-				<td>Name</td>
-				<td>Quantity</td>
-				<td>Price</td>
-				<td>Total</td>
-				
-				
+					<td>Order ID</td>
+					<td>Order Date</td>
+					<td>Name</td>
+					<td>Quantity</td>
+					<td>Price</td>
+					<td>Total</td>
+					<td>Paid?</td>
+					<td>View order</td>
+					<td>Cancel</td>
 				</tr>
 			</thead>
 			<tbody>
 				{% for order_item in order.get_items %}
 				<tr>
 				
+					<td>{{order.id}}</td>
+					<td>{{order.created_date}}</td>
 					<td>{{order_item.product}}</td>
 					<td>{{order_item.quantity}}</td>
 					<td>{{order_item.price}}</td>
-					<td>{{order_item.get_cost}}</td>				
+					<td>{{order_item.get_cost}}</td>		
+					<td>{{order.paid}}</td>		
+					<td><a href="{% url 'orders:detail' order.id %}"><button class="btn btn-primary bg-green-500 mt-4 mb-6 py-2 px-2">Order Detail</button></a></td>
+					<td><a href="{% url 'orders:cancel_order' order.id %}"><button class="btn btn-primary bg-red-500 mt-4 mb-6 py-2 px-2">Cancel Order</button></a></td>
 				</tr>
 				{% endfor %}
 				<!-- End of For loop -->			
 			</tbody>
 		</table>
 		
-				<p><strong>Order Total: &euro; 
+				<p><strong>Order Total:
                                 {{order.get_total_cost}}</strong></p>
 			
         
         <p>
-            <a href="{% url 'orders:cancel_order' order.id %}"><button class="btn btn-primary bg-red-500 mt-4 mb-6 py-2 px-2">Cancel Order</button></a>
-			<a href="{% url 'orders:detail' order.id %}"><button class="btn btn-primary bg-green-500 mt-4 mb-6 py-2 px-2">View Detail</button></a>
+            <!-- <a href="{% url 'orders:cancel_order' order.id %}"><button class="btn btn-primary bg-red-500 mt-4 mb-6 py-2 px-2">Cancel Order</button></a> -->
+			<!-- <a href="{% url 'orders:detail' order.id %}"><button class="btn btn-primary bg-green-500 mt-4 mb-6 py-2 px-2">Order Detail</button></a> -->
         </p>
 	{% endfor %}
 </div>

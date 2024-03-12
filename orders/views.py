@@ -40,7 +40,7 @@ def create_order(request, total=0, counter=0, cart_items=None):
                 order_item.save() # saves the order
                 
 
-                # order_items.delete() # clears the basket that existed with items
+                order_items.delete() # clears the basket that existed with items
         except ObjectDoesNotExist:
             pass
         
@@ -65,9 +65,9 @@ def cancel_order(request, order_id):
     current_date = datetime.now(timezone.utc)
     date_difference = current_date - order_date
     difference_in_mins = date_difference.total_seconds() / 60.0
-    if difference_in_mins <= 150:
+    if difference_in_mins <= 150 and order.paid == False:
         order.delete()
-        messages.success(request, ("Order has been deleted successfully"))
+        messages.success(request, ("The order has been deleted successfully"))
     else:
         messages.success(request, ("It is too late to cancel this order"))
     return redirect('orders:order_history')
@@ -81,7 +81,7 @@ def detail(request, pk):
         order_details = Order.objects.filter(pk=pk)
     
         return render(request, 'orders/order_detail.html', 
-                  {'order_details': order_details})
+                  {'order_details': order_details, 'title': 'View order'})
     else:
         return redirect('orders:order_history')
                    
