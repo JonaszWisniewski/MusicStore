@@ -1,6 +1,5 @@
 from datetime import datetime, timezone
 from django.shortcuts import render, redirect, get_object_or_404
-
 from users.forms import ProfileUpdateForm
 from .models import Order, OrderItems
 from cart.models import Cart, CartItem

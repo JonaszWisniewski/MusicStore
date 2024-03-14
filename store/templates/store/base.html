@@ -5,33 +5,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="text/JavaScript" 
-src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js">
+                src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js">
 </script>
     
     <title>{% block title %}{% endblock %} | Guitar Shop</title>
 </head>
 <body>
+    <nav class="bg-black border-gray-200 dark:bg-gray-900">
+        <div class="flex flex-wrap items-center justify-between mx-auto p-4">
+          <a href="http://localhost:8000/" class="flex items-center space-x-3 rtl:space-x-reverse">
+              <img src="https://i.pinimg.com/originals/6b/59/07/6b590752f365178bf8d7176a5666040e.gif" class="h-8"/>
+              <span class="self-center text-2xl font-semibold whitespace-nowrap text-white">Music Store</span>
+          </a>
+          <button data-collapse-toggle="navbar-default" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+              
+                  
 
-    <nav class="py-6 px-6 flex justify-between items-center border-gray-200 bg-black">
-        <a href="/" class="text-xl font-semibold text-white px-6">Guitar Shop</a>
+          </button>
+          <div class="hidden w-full md:block md:w-auto" id="navbar-default">
+            <ul class="font-medium flex flex-col p-4 md:p-0 mt-4 md:flex-row md:space-x-8">
+              <li>
+                <a href="{% url 'orders:order_history' %}" class="block py-2 px-3 text-white rounded md:bg-transparent md:text-white-700 md:p-0 dark:text-white md:dark:text-white" aria-current="page">Order History</a>
+              </li>
+              <li>
+                <a href="{% url 'cart:view_cart' %}" class="block py-2 px-3 text-white rounded md:bg-transparent md:text-white-700 md:p-0 dark:text-white md:dark:text-white">View My Cart {% if item_count > 0 %} ({{ item_count }}) {% endif %}</a>
+              </li>
+              <li>
+                <a href="{% url 'store:contact' %}" class="block py-2 px-3 text-white rounded md:bg-transparent md:text-white-700 md:p-0 dark:text-white md:dark:text-white">Contact Us</a>
+              </li>
+              {% if request.user.is_authenticated %}
+              <li>
+                <a href="{% url 'users:profile' %}" class="block py-2 px-3 text-white rounded md:bg-transparent md:text-white-700 md:p-0 dark:text-white md:dark:text-white">My Profile</a>
+              </li>
+              <li>
+                <a href="{% url 'products:new_product' %}" class="block py-2 px-3 text-white rounded md:bg-transparent md:text-white-700 md:p-0 dark:text-white md:dark:text-white">Add Product</a>
+              </li>
+              <li>
+                <a href="{% url 'users:logout' %}" class="block py-2 px-3 text-white rounded md:bg-transparent md:text-white-700 md:p-0 dark:text-white md:dark:text-white">Log Out</a>
+              </li>
+              {% else %}
 
-        <div class="space-x-6">
-            <a href="{% url 'orders:order_history' %}" class="text-lg font-sdemibold hover:text-gray-500 text-white">Order history</a>
-            <a href="{% url 'cart:view_cart' %}" class="text-lg font-sdemibold hover:text-gray-500 text-white">View My Cart {% if item_count > 0 %} ({{ item_count }}) {% endif %}
-            </a>
-            <a href="{% url 'store:contact' %}" class="text-lg font-sdemibold hover:text-gray-500 text-white">Contact Us</a>
-            
-            {% if request.user.is_authenticated %} <!-- as long as user is not logged in it will show all, but once they are logged in hide sign up and login button -->
-            <a href="{% url 'users:profile' %}" class="text-lg font-sdemibold hover:text-gray-500 text-white">My Profile</a>
-            <a href="{% url 'products:new_product' %}" class="px-6 py-3 text-lg font-semibold bg-gray-500 text-white rounded-xl hover:bg-gray-700">Add Product</a>
-            <a href="{% url 'users:logout' %}" class="px-6 py-3 text-lg font-semibold bg-gray-500 text-white rounded-xl hover:bg-gray-700">Log Out</a>
-            {% else %}
-            <a href="{% url 'users:signup' %}" class="px-6 py-3 text-lg font-semibold bg-teal-500 text-white rounded-xl hover:bg-teal-700">Sign Up</a>
-            <a href="{% url 'users:login' %}" class="px-6 py-3 text-lg font-semibold bg-gray-500 text-white rounded-xl hover:bg-gray-700">Login</a>
-            
-            {% endif %}
+              <li>
+                <a href="{% url 'users:signup' %}" class="block py-2 px-3 text-white rounded md:bg-transparent md:text-white-700 md:p-0 dark:text-white md:dark:text-white">Sign Up</a>
+              </li>
+
+              <li>
+                <a href="{% url 'users:login' %}" class="block py-2 px-3 text-white rounded md:bg-transparent md:text-white-700 md:p-0 dark:text-white md:dark:text-white">Log In</a>
+              </li>
+              {% endif %}
+            </ul>
+          </div>
         </div>
-        </nav>
+      </nav>
+
     <div class="px-6 py-6">
         {% if messages %}
             {% for message in messages %}

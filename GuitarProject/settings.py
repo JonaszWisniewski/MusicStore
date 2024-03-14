@@ -9,10 +9,10 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
-import os
+import sys, os
+sys.path.append('..')
 from pathlib import Path
-
+from cfg import STRIPE_WEBHOOK_SECRET, STRIPE_SECRET_KEY, STRIPE_PUBLIC_KEY
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -137,11 +137,11 @@ REST_FRAMEWORK = {
     ]
 }
 
-STRIPE_SECRET_KEY = 'sk_test_CKtP4w59YdQBvt2i8ehXHuQw00Nt6gF5Gg'
+STRIPE_SECRET_KEY = STRIPE_SECRET_KEY
 
-STRIPE_PUBLIC_KEY = 'pk_test_SuSizO09uXzhHy3eIoFrfssc00QMsN1DYx'
+STRIPE_PUBLIC_KEY = STRIPE_PUBLIC_KEY
 
-STRIPE_WEBHOOK_SECRET = 'whsec_439c5066d67c327c8d658005da3fe0500aeef8ddc3d7b578640c1b9fb7f13c72'
+STRIPE_WEBHOOK_SECRET = STRIPE_WEBHOOK_SECRET
 
 STATIC_URL = '/static/'
 MEDIA_URL = 'media/'

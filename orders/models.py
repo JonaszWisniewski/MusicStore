@@ -15,7 +15,10 @@ class Order(models.Model):
     def __str__(self):
         # return 'Order {}'.format(self.id)
         return str(self.id)
-
+    
+    def get_created_date(self):
+        op = '%s-%s-%s' % (self.created_date.day, self.created_date.month, self.created_date.year)
+        return str(op)
     
     def get_total_cost(self):
         return sum(item.get_cost() for item in self.order_items.all())

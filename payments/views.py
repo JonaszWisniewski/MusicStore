@@ -10,13 +10,14 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from django.http.response import JsonResponse, HttpResponse
+from django.http.response import HttpResponse
 
-
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 @login_required
-def checkout(request, pk): #315
-    stripe.api_key = settings.STRIPE_SECRET_KEY
+def checkout(request, pk): 
+    
+    
 #     cart = Cart.objects.get(cart_id=_cart_id(request)) #retrieving the cart session
 #     print(cart)
 #     cart_items = CartItem.objects.filter(cart=cart) #retrieving the cart items
@@ -62,17 +63,17 @@ def checkout(request, pk): #315
 
 @csrf_exempt
 def stripe_webhook(request):
-        
         payload = request.body
-        
+    
         sig_header = request.META['HTTP_STRIPE_SIGNATURE']
-
+      
         event = None
 
         try:
                 event = stripe.Webhook.construct_event(
                         payload, sig_header, settings.STRIPE_WEBHOOK_SECRET
                 )
+                
         except ValueError as e:
         # Invalid payload
                 return HttpResponse(status=400)
