@@ -7,6 +7,7 @@ from cart.views import _cart_id
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
+from django.core.paginator import Paginator
 
 @login_required
 def create_order(request, total=0, counter=0, cart_items=None):
@@ -52,8 +53,15 @@ def order_history(request):
     if request.user.is_authenticated:
         # email = str(request.user.email)
         order_details = Order.objects.filter(created_by=request.user)
-    
-        context = {'order_details': order_details, 'title': 'All Orders'}
+
+        page = Paginator(order_details, 3)
+
+        page_list = request.GET.get('page')
+      
+
+        page = page.get_page(page_list)
+
+        context = {'page': page, 'title': 'All Orders'}
 
     return render(request, 'orders/order_history.html', context)
 
@@ -76,11 +84,12 @@ def cancel_order(request, order_id):
 def detail(request, pk):
     
     order_details = get_object_or_404(Order, pk=pk)
+
     if order_details.created_by == request.user or request.user.is_staff:
         order_details = Order.objects.filter(pk=pk)
     
         return render(request, 'orders/order_detail.html', 
-                  {'order_details': order_details, 'title': 'View order'})
+                  {'order_details': order_details, 'title': 'Order {}'.format(pk)})
     else:
         return redirect('orders:order_history')
                    

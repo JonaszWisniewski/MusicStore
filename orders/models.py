@@ -16,6 +16,12 @@ class Order(models.Model):
         # return 'Order {}'.format(self.id)
         return str(self.id)
     
+    def get_paid_order(self):
+        if self.paid:
+            return str('Yes')
+        else:
+            return str('No')
+    
     def get_created_date(self):
         op = '%s-%s-%s' % (self.created_date.day, self.created_date.month, self.created_date.year)
         return str(op)

@@ -5,19 +5,18 @@ from products.models import Category, Product
 
 from django.core.paginator import Paginator
 
-class ProductListView(ListView):
-    model = Product
-    template_name = 'store/index.html'
-    context_object_name = 'post'
-    paginate_by = 2
-
 def index(request):
     products = Product.objects.filter(is_sold=False)
 
     categories = Category.objects.all()
 
+    page = Paginator(products, 2)
+
+    page_list = request.GET.get('page')
+    page = page.get_page(page_list)
+
     return render(request, 'store/index.html', {'categories': categories,
-                                                'products': products,
+                                                'page': page,
                                                 })
 
 
