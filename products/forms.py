@@ -48,4 +48,7 @@ class EditProductForm(forms.ModelForm):
             })
         }
 
+class CouponCodeForm(forms.Form):
+    code = forms.CharField(required=False)
+
     

@@ -68,5 +68,9 @@ def edit_product(request, pk):
         })
     else:
         return redirect('products:detail', pk=product.id)
+    
+def add_coupon(request, code):
+    pass
+
         
 

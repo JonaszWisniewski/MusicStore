@@ -3,6 +3,7 @@ from django.db import models
 from PIL import Image
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class Category(models.Model):
@@ -43,5 +44,15 @@ class Product(models.Model):
         img.close()
         self.image.close()
 
+
+class Coupon(models.Model):
+    code = models.CharField(max_length=16, unique=True)
+    valid_from = models.DateTimeField()
+    valid_to = models.DateTimeField()
+    discount = models.IntegerField()
+    active = models.BooleanField(default=False)
+    
+    def __str__(self):
+        return self.code
     
 

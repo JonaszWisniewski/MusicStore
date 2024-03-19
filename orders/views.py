@@ -20,21 +20,17 @@ def create_order(request, total=0, counter=0, cart_items=None):
             
             if cart_items:
                 order_details = Order.objects.create(created_by=request.user)
-                
                 order_details.save()
-        
-    
         
             # cart = Cart.objects.get(cart_id = _cart_id(request))
             # cart_items = CartItem.objects.filter(cart=cart)
-            
             for order_items in cart_items:
                 order_item = OrderItems.objects.create(
                     product = order_items.product.name,
                     price = order_items.product.price,
                     quantity = order_items.quantity,
                     order = order_details)
-                    
+                
                 total += (order_items.quantity * order_items.product.price)
                 counter += order_items.quantity
                 order_item.save() # saves the order
