@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+import decimal
 from django.shortcuts import render, redirect, get_object_or_404
 from users.forms import ProfileUpdateForm
 from .models import Order, OrderItems
@@ -8,9 +9,10 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
 from django.core.paginator import Paginator
+from products.models import Coupon
 
 @login_required
-def create_order(request, total=0, counter=0, cart_items=None):
+def create_order(request, total=0, counter=0, cart_items=None, discount_price=0, total_discount=0):
     if request.user.is_authenticated:
         try:
             cart = Cart.objects.get(cart_id = _cart_id(request))
@@ -21,6 +23,8 @@ def create_order(request, total=0, counter=0, cart_items=None):
             if cart_items:
                 order_details = Order.objects.create(created_by=request.user)
                 order_details.save()
+
+        
         
             # cart = Cart.objects.get(cart_id = _cart_id(request))
             # cart_items = CartItem.objects.filter(cart=cart)
@@ -29,19 +33,31 @@ def create_order(request, total=0, counter=0, cart_items=None):
                     product = order_items.product.name,
                     price = order_items.product.price,
                     quantity = order_items.quantity,
+                    discount_price = order_items.discount_price, #pulls the discount price from the cart
                     order = order_details)
                 
                 total += (order_items.quantity * order_items.product.price)
                 counter += order_items.quantity
-                order_item.save() # saves the order
+                total_discount += (order_items.quantity * order_items.discount_price)
                 
+                
+               
+                
+                
+                order_item.save() # saves the order
 
+                
+                
+            
                 order_items.delete() # clears the basket that existed with items
+            
+            # for item in cart_items:
+            #     discount_price = item.discount_price   
         except ObjectDoesNotExist:
             pass
-        
+        # del request.session['discount_pricee']
         profileForm = ProfileUpdateForm(instance=request.user.profile)
-        context = {'cart_items': cart_items, 'total': total, 'profileForm': profileForm, 'title': 'My Order', 'counter': counter}
+        context = {'cart_items': cart_items, 'total': total, 'profileForm': profileForm, 'title': 'My Order', 'counter': counter, 'discount_price': discount_price, 'total_discount': total_discount}
         return render(request, 'orders/order.html', context)
 
 @login_required

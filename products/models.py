@@ -4,6 +4,7 @@ from PIL import Image
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
 from django.core.validators import MinValueValidator, MaxValueValidator
+from djmoney.models.fields import MoneyField
 
 
 class Category(models.Model):
@@ -21,8 +22,9 @@ class Product(models.Model):
     category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     description = models.TextField(max_length=1024, blank=True, null=True)
-    price = models.DecimalField(max_digits=6, decimal_places=2)
-    image = models.ImageField(upload_to='product_images', blank=True, null=True)
+    price = MoneyField(max_digits=6, default = 50.00, decimal_places=2, default_currency='USD')
+    rating = models.PositiveIntegerField(default=1, null=True, blank=True, choices=((1, '1 star'), (2, '2 star'), (3, '3 star'), (4, '4 star'), (5, '5 star')))
+    image = models.ImageField(default='product_images/default_image.png', upload_to='product_images', blank=True, null=True)
     image_thumbnail = ImageSpecField(source='image', processors=[ResizeToFill(283,158)],
                                      options={'quality': 90})
     is_sold = models.BooleanField(default=False) # default the item to be marked as not sold

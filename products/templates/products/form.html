@@ -20,11 +20,11 @@
         <div class="mb-2">
             <label class="inline-block mb-2 mt-2 font-medium">Product Name</label>
             {{ form.name }}
-        </div>
+        </div> 
         <div class="mb-2">
             <label class="inline-block mb-2 mt-2 font-medium">Description</label>
             {{ form.description }}
-        </div>
+        </div> 
         <div class="mb-2">
             <label class="inline-block mb-2 mt-2 font-medium">Price</label>
             {{ form.price }}
@@ -32,9 +32,13 @@
             <label class="inline-block mb-2 mt-2 font-medium">Image</label>
             {{ form.image }}
         </div>
+        
         <button class="py-4 mt-5 px-6 text-lg bg-teal-500">Submit</button>
         </div>
+        
     </div>
+
+
 
     {% if form.errors or form.non_field_errors %}
     <div class="mb-3 p-6 bg-red-100 rounded-xl">
@@ -43,6 +47,8 @@
         {% endfor %}
     </div>
     {% endif %}
+
+
     
 </form>
 

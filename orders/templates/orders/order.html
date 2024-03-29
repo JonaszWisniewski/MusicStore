@@ -22,8 +22,9 @@
     <div class="relative px-6">
         <h1 class="font-bold">{{ item.product.name }}</h1>
         <h1>Quantity: {{ item.quantity }}</h1>
+        <h1>Discount: {{item.discount_price}}</h1>
         
-        <h1 class="font-bold">Price: ${{item.product.price}} {% if item.quantity > 1 %} (${{item.sub_total}}) {% endif %}</h1>
+        <h1 class="font-bold">Price: {{item.product.price}} {% if item.quantity > 1 %} (${{item.sub_total}}) {% endif %}</h1>
 
     </div>
     
@@ -33,8 +34,8 @@
 
 <div class="px-6 mb-5">
   
-<h1 class="mt-5 font-medium"> Subtotal ({{counter}} items:) ${{total}}</h1>
-
+<h1 class="mt-5 font-medium"> Subtotal ({{counter}} items:) {{total}}</h1>
+<h1 class="mt-5 font-medium"> Discount: {{total_discount}}</h1>
 </div>
 
 

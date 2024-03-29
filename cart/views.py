@@ -21,6 +21,7 @@ def _cart_id(request):
 def view_cart(request, total=0, counter=0, cart_items = None, coupon_code=None, total_price_after_discount=0, get_discount=0, discount_percetange=0, discount_per_item=0, total_per_item=0, form=None):
 	# form_qty = CartAddProductForm
 	try:
+		
 		cart = Cart.objects.get(cart_id=_cart_id(request))
 		cart_items = CartItem.objects.filter(cart=cart)
 
@@ -50,13 +51,20 @@ def view_cart(request, total=0, counter=0, cart_items = None, coupon_code=None, 
 						print("discount", get_discount)
 						total_price_after_discount = round(total - get_discount, 2) # total price of the discounted cart
 						for cart_item in cart_items:
+							# x = cart_item.product.price.amount
+							# print("test: ", x)
 							cart_item.discount_price = round(cart_item.product.price * discount_decimal, 2)
+							print(type(cart_item.discount_price))
+							# request.session['discount_pricee'][] = str(cart_item.discount_price)
+							cart_item.save()
+							print("cart item discount price", cart_item.discount_price)
 							total_per_item = round(cart_item.discount_price * cart_item.quantity, 2)
 							print("discount per item", cart_item.discount_price)
-							# total -= round(discount_per_item * cart_item.quantity, 2)
+
 						total_price_after_discount = str(total_price_after_discount)
 						print(total_price_after_discount)
 						coupon_code = code
+						
 						
 		else:
 			form = CouponCodeForm()
@@ -88,7 +96,9 @@ def add_product_to_cart(request, product_id):
 		cart_item = CartItem.objects.create(
 					product = product,
 					quantity = 1,
-					cart = cart
+					cart = cart,
+					discount_price = 0.00
+					
 			)
 		cart_item.save()
 	return redirect('cart:view_cart')

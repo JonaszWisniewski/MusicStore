@@ -1,5 +1,6 @@
 from django.db import models
 from products.models import Product
+from djmoney.models.fields import MoneyField
 
 class Cart(models.Model):
 	cart_id = models.CharField(max_length=250, blank=True)
@@ -14,8 +15,8 @@ class Cart(models.Model):
 class CartItem(models.Model):
 	product = models.ForeignKey(Product, on_delete=models.CASCADE)
 	cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
-	quantity = models.IntegerField()
-	discount_price = models.DecimalField(default=0, max_digits=6, decimal_places=2)
+	quantity = models.IntegerField(default=1)
+	discount_price = MoneyField(max_digits=7, decimal_places=2, default_currency='USD')
 	
 	class Meta:
 		db_table = 'CartItem'

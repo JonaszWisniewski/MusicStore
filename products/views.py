@@ -1,16 +1,34 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import NewProductForm, EditProductForm
+from .forms import AddRatingForm, NewProductForm, EditProductForm
 from .models import Product
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 def detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
-    related_products = Product.objects.filter(category=product.category, is_sold=False).exclude(pk=pk)[0:3]
+    related_products = Product.objects.filter(category=product.category, is_sold=False).exclude(pk=pk)[0:5]
+    print(related_products)
+    if request.method == 'POST':
+        print("test")
+        form = AddRatingForm(request.POST)
+        if form.is_valid():
+            product = form.save(commit=False)
+            product.save()
 
+            return redirect('products:detail', pk=product.id)
+        else:
+            e = form.errors
+            print(e)
+
+           
+    else:
+        form = AddRatingForm()
+
+    
+    
     return render(request, 'products/product_detail.html', 
                   {'product': product,
-                   'related_products': related_products})
+                   'related_products': related_products, 'form': form})
 
 @login_required
 def new_product(request):
@@ -68,9 +86,6 @@ def edit_product(request, pk):
         })
     else:
         return redirect('products:detail', pk=product.id)
-    
-def add_coupon(request, code):
-    pass
 
         
 

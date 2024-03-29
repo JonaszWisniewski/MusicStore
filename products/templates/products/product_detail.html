@@ -11,10 +11,21 @@
     <div class="col-span-5 p-6 bg-gray-100 rounded-xl relative">
         <h1 class="mb-6 text-3xl">{{ product.name }}</h1>
         <p class="text-black-700"><strong>Seller: </strong>{{ product.created_by }}</p>
-        <p class="text-black-700"><strong>Price: $ </strong>{{ product.price }}</p>
+        <p class="text-black-700"><strong>Price: </strong>{{ product.price }}</p>
         {% if product.description %}
         <p class="text-black-700"><strong>Description: </strong><br>{{ product.description }}</p>
         {% endif %}
+
+        <form method="post" enctype="multipart/form-data"> 
+            {% csrf_token %}
+            
+            {{ form.as_p}}
+            
+            <input class="inline-block text-green-500" type="submit">
+    
+        </form>
+
+     
         
         <div class="absolute bottom-8">
             {% if request.user == product.created_by or request.user.is_staff %}
@@ -56,7 +67,6 @@
 
                 <div class="p-6 bg-white rounded-b-xl">
                     <h2 class="text-2xl">{{ products.name }}</h2>
-                    <p class="text-gray-500">Price: {{ products.price }}</p>
                     <p class="text-gray-500">Price: {{ products.price }}</p>
                 </div>
                 

@@ -30,13 +30,18 @@ def checkout(request, pk):
     line_items = []
                 
     for order_item in order_items:
-                        unit_amount = int(order_item.price.amount * 100)
+                        testval = order_item.discount_price.amount
+                        print(testval)
+                        unit_amount = (order_item.price.amount - testval) * 100
+                        unit_amount = int(unit_amount)
+                        print(type(unit_amount))
                         line_items.append({
                                 'price_data': {
                                         'currency': 'usd',
                                         'unit_amount': unit_amount,
                                         'product_data': {
                                                 'name': order_item.product,
+                                                
                                                 # add images in the future, unable at the moment as stripe is unable to access local django server
             
                                         },
@@ -51,6 +56,7 @@ def checkout(request, pk):
                 payment_method_types=['card'],
                 mode='payment',
                 success_url=settings.SITE_URL,
+                
                 metadata={
                                 "order_id": pk
                         },
@@ -99,7 +105,8 @@ def stripe_webhook(request):
                 line_items = session.line_items
                 # Fulfill the purchase...
                 print(session)
-                return render(request, 'orders/order_history', {'order_details': order_details})
+                context = {'order_details': order_details}
+                return render(request, 'orders/order_history.html', context) # render the order_history.html template for order paid
         return HttpResponse(status=200)
 
 

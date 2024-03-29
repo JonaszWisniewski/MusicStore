@@ -69,7 +69,7 @@
         <!-- <input type="submit" value="Update"> -->
         </form>
         
-        <h1 class="font-bold">Price: ${{item.product.price}} {% if item.quantity > 1 %} (${{item.sub_total}}) {% endif %}</h1>
+        <h1 class="font-bold">Price: {{item.product.price}} {% if item.quantity > 1 %} ({{item.sub_total}}) {% endif %}</h1>
         <h1 class="font-bold">{% if item.discount_price > 0.00 %}Saving: ${{item.discount_price}} {% if item.quantity > 1 %} (${{item.discount_sub_total}}) {% endif %} {% endif %}</h1>
         <h1 class="font-bold">{% if item.discount_price > 0.00 %}Subtotal with discount: ${{ item.total_after_discount }} {% endif %}</h1>
         <a href="{% url 'cart:remove_product_from_cart' item.product.id %}" class="absolute bottom-0 text-red-900 font-bold">Delete</a>
@@ -95,13 +95,13 @@
   
   <div class="mb-5">
   <h1 class="mt-5 font-medium">Click  <a href="{% url 'cart:clear_cart' %}" class="text-red-900 font-bold">HERE</a> to clear all items from the cart</h1>
-  <h1 class="mt-5 font-medium"> Regular price ({{counter}} items:) ${{total}}</h1>
-  <h1 class="mt-5 font-medium"> Discount applied ({{discount_percetange}}%): -${{get_discount}}</h1>
+  <h1 class="mt-5 font-medium"> Regular price ({{counter}} items:) {{total}}</h1>
+  <h1 class="mt-5 font-medium"> Discount applied ({{discount_percetange}}%): -{{get_discount}}</h1>
   {% if total_price_after_discount %}
-  <h1 class="mt-5 font-medium"> SUBTOTAL ({{counter}} items:) ${{total_price_after_discount}}</h1>
+  <h1 class="mt-5 font-medium"> SUBTOTAL ({{counter}} items:) {{total_price_after_discount}}</h1>
 
   {% else %}
-  <h1 class="mt-5 font-medium"> SUBTOTAL ({{counter}} items:) ${{total}}</h1>
+  <h1 class="mt-5 font-medium"> SUBTOTAL ({{counter}} items:) {{total}}</h1>
   {% endif %}
  
     
