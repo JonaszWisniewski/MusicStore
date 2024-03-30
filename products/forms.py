@@ -47,10 +47,14 @@ class EditProductForm(forms.ModelForm):
 class CouponCodeForm(forms.Form):
     code = forms.CharField(required=False)
 
+
+
 class AddRatingForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields= ('rating',)
+        fields = ('rating',)
+        
+
 
 
 

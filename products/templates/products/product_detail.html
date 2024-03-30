@@ -12,14 +12,17 @@
         <h1 class="mb-6 text-3xl">{{ product.name }}</h1>
         <p class="text-black-700"><strong>Seller: </strong>{{ product.created_by }}</p>
         <p class="text-black-700"><strong>Price: </strong>{{ product.price }}</p>
+        <p class="text-black-700"><strong>Rating: </strong>{{ product.rating }}</p>
+
         {% if product.description %}
         <p class="text-black-700"><strong>Description: </strong><br>{{ product.description }}</p>
         {% endif %}
 
-        <form method="post" enctype="multipart/form-data"> 
+        <form method="post" action="{% url 'products:detail' product.id %}" enctype="multipart/form-data"> 
             {% csrf_token %}
             
-            {{ form.as_p}}
+            <label class="inline-block mb-2 mt-2 font-medium"></label>
+            {{ form }}
             
             <input class="inline-block text-green-500" type="submit">
     

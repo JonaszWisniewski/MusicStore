@@ -10,10 +10,12 @@ def detail(request, pk):
     print(related_products)
     if request.method == 'POST':
         print("test")
-        form = AddRatingForm(request.POST)
+        form = AddRatingForm(request.POST, instance=product)
         if form.is_valid():
-            product = form.save(commit=False)
-            product.save()
+            rating = form.save(commit=False)
+            rating.save()
+           
+            
 
             return redirect('products:detail', pk=product.id)
         else:
@@ -38,6 +40,7 @@ def new_product(request):
         if form.is_valid():
             product = form.save(commit=False)
             product.created_by = request.user
+            print(product)
             product.save()
             
 
