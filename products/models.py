@@ -46,6 +46,13 @@ class Product(models.Model):
         img.close()
         self.image.close()
 
+class ProductsList(models.Model):
+    product = models.ForeignKey(Product, related_name='products_list', on_delete=models.CASCADE)
+    user_id = models.CharField(max_length=16)
+
+    def __str__(self):
+        return str(self.product.id)
+
 
 class Coupon(models.Model):
     code = models.CharField(max_length=16, unique=True)

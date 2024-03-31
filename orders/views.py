@@ -24,13 +24,9 @@ def create_order(request, total=0, counter=0, cart_items=None, discount_price=0,
                 order_details = Order.objects.create(created_by=request.user)
                 order_details.save()
 
-        
-        
-            # cart = Cart.objects.get(cart_id = _cart_id(request))
-            # cart_items = CartItem.objects.filter(cart=cart)
             for order_items in cart_items:
                 order_item = OrderItems.objects.create(
-                    product = order_items.product.name,
+                    product = order_items.product,
                     price = order_items.product.price,
                     quantity = order_items.quantity,
                     discount_price = order_items.discount_price, #pulls the discount price from the cart

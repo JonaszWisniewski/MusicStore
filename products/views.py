@@ -1,27 +1,32 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .forms import AddRatingForm, NewProductForm, EditProductForm
-from .models import Product
+from .models import Product, ProductsList
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 def detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
+    user = request.user.id
+    bought_product = ProductsList.objects.filter(user_id=user)
+    ids = []
+    uids = []
+    ids = [product.product.id for product in bought_product]
+    # uids = [product.user_id for product in bought_product]
+
+    print(ids)
+    for x in bought_product:
+        uids.append(int(x.user_id))
+    print(uids)
+    print(request.user.id)
+    
     related_products = Product.objects.filter(category=product.category, is_sold=False).exclude(pk=pk)[0:5]
-    print(related_products)
+    
     if request.method == 'POST':
-        print("test")
         form = AddRatingForm(request.POST, instance=product)
         if form.is_valid():
             rating = form.save(commit=False)
             rating.save()
-           
-            
-
             return redirect('products:detail', pk=product.id)
-        else:
-            e = form.errors
-            print(e)
-
            
     else:
         form = AddRatingForm()
@@ -30,7 +35,7 @@ def detail(request, pk):
     
     return render(request, 'products/product_detail.html', 
                   {'product': product,
-                   'related_products': related_products, 'form': form})
+                   'related_products': related_products, 'form': form, 'ids': ids, 'uids': uids, 'bought_product': bought_product})
 
 @login_required
 def new_product(request):

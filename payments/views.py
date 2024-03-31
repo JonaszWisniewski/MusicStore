@@ -7,6 +7,7 @@ from cart.models import Cart, CartItem
 from cart.views import _cart_id
 from orders.models import Order, OrderItems
 from django.conf import settings
+from products.models import ProductsList
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
@@ -26,7 +27,7 @@ def checkout(request, pk):
     order = Order.objects.get(id=pk)
     
     order_items = OrderItems.objects.filter(order=order)
-    print(order_items)
+
     line_items = []
                 
     for order_item in order_items:
@@ -35,6 +36,12 @@ def checkout(request, pk):
                         unit_amount = (order_item.price.amount - testval) * 100
                         unit_amount = int(unit_amount)
                         print(type(unit_amount))
+                        print(order_item.product.id)
+
+                        # product_list_insert = ProductsList.objects.create(
+                        #         product = order_item.product
+                        # )
+                        # product_list_insert.save()
                         line_items.append({
                                 'price_data': {
                                         'currency': 'usd',
@@ -58,14 +65,14 @@ def checkout(request, pk):
                 success_url=settings.SITE_URL,
                 
                 metadata={
-                                "order_id": pk
+                                "order_id": pk,
+                                "user_id": request.user.id
                         },
                 cancel_url=settings.SITE_URL + '/orders/{}'.format(pk)
                 
             )
     
     return redirect(checkout_session.url, code=303)
-
 
 @csrf_exempt
 def stripe_webhook(request):
@@ -96,12 +103,23 @@ def stripe_webhook(request):
                 )
                 
                 order_id = session["metadata"]["order_id"]
-                
+                user = session["metadata"]["user_id"]
                 order_details = Order.objects.get(id=order_id)
                 print(order_details)
                 order_details.paid = True
            
                 order_details.save()
+
+                order_items = OrderItems.objects.filter(order=order_details)
+                for order_item in order_items:
+                                        
+                                # if not ProductsList.objects.filter(product=order_item.product).exists():
+                                                product_list_insert = ProductsList.objects.create(
+                                                product = order_item.product,
+                                                user_id = user
+                                 
+                                                )
+                                                product_list_insert.save()
                 line_items = session.line_items
                 # Fulfill the purchase...
                 print(session)

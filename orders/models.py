@@ -2,6 +2,7 @@ from decimal import Decimal
 from django.db import models
 from djmoney.models.fields import MoneyField
 from django.contrib.auth.models import User
+from products.models import Product
 
 
 class Order(models.Model):
@@ -41,7 +42,7 @@ class Order(models.Model):
     
 class OrderItems(models.Model):
     order = models.ForeignKey(Order, related_name='order_items', on_delete=models.CASCADE)
-    product = models.CharField(max_length=256)
+    product = models.ForeignKey(Product, related_name='order_items', on_delete=models.CASCADE)
     price = MoneyField(max_digits=7, decimal_places=2, default_currency='USD')
     quantity = models.PositiveIntegerField(default=1)
     discount_price = MoneyField(max_digits=7,decimal_places=2, default_currency='USD')

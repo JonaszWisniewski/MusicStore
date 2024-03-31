@@ -17,16 +17,24 @@
         {% if product.description %}
         <p class="text-black-700"><strong>Description: </strong><br>{{ product.description }}</p>
         {% endif %}
+        
+        
 
+        {% for prod in bought_product %}
+        {% if prod.product.id in ids and prod.product.id == product.id %}
         <form method="post" action="{% url 'products:detail' product.id %}" enctype="multipart/form-data"> 
             {% csrf_token %}
             
             <label class="inline-block mb-2 mt-2 font-medium"></label>
-            {{ form }}
+            {{ form }} 
             
             <input class="inline-block text-green-500" type="submit">
-    
+            
         </form>
+        
+        
+        {% endif %}
+        {% endfor %}
 
      
         
