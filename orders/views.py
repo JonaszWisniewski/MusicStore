@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 import decimal
 from django.shortcuts import render, redirect, get_object_or_404
 from users.forms import ProfileUpdateForm
-from .models import Order, OrderItems
+from .models import Order, OrderItems, OrderAddress
 from cart.models import Cart, CartItem
 from cart.views import _cart_id
 from django.contrib.auth.decorators import login_required
@@ -32,13 +32,20 @@ def create_order(request, total=0, counter=0, cart_items=None, discount_price=0,
                     discount_price = order_items.discount_price, #pulls the discount price from the cart
                     order = order_details)
                 
+            
+                
                 total += (order_items.quantity * order_items.product.price)
                 counter += order_items.quantity
                 total_discount += (order_items.quantity * order_items.discount_price)
-                
                 order_item.save() # saves the order
 
                 order_items.delete() # clears the basket that existed with items
+
+                order_address = OrderAddress.objects.create(
+                order = order_details,
+                profile = request.user.profile
+                )
+                order_address.save()
             
             # for item in cart_items:
             #     discount_price = item.discount_price   
@@ -89,6 +96,7 @@ def detail(request, pk):
     if order_details.created_by == request.user or request.user.is_staff:
         order_details = Order.objects.filter(pk=pk)
         profileForm = ProfileUpdateForm(instance=request.user.profile)
+
     
         return render(request, 'orders/order_detail.html', 
                   {'order_details': order_details, 'profileForm': profileForm, 'title': 'Order {}'.format(pk)})

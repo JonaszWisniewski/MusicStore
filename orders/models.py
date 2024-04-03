@@ -2,6 +2,7 @@ from decimal import Decimal
 from django.db import models
 from djmoney.models.fields import MoneyField
 from django.contrib.auth.models import User
+from users.models import Profile
 from products.models import Product
 
 
@@ -49,6 +50,7 @@ class Order(models.Model):
     
 class OrderAddress(models.Model):
     order = models.ForeignKey(Order, related_name='order_address', on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile, related_name='order_address', on_delete=models.CASCADE)
     full_name = models.CharField(max_length=64, blank=True)
     age = models.CharField(max_length=4, blank=False)
     address1 = models.TextField(max_length=100, blank=True)
@@ -56,6 +58,7 @@ class OrderAddress(models.Model):
     city = models.CharField(max_length=100, blank=True)
     county = models.CharField(max_length=30, blank=True)
     phone = models.IntegerField(null=True)
+
     
 class OrderItems(models.Model):
     order = models.ForeignKey(Order, related_name='order_items', on_delete=models.CASCADE)

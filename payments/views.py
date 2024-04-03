@@ -5,13 +5,14 @@ from rest_framework import status
 from django.shortcuts import get_object_or_404, redirect, render
 from cart.models import Cart, CartItem
 from cart.views import _cart_id
-from orders.models import Order, OrderItems
+from orders.models import Order, OrderItems, OrderAddress
 from django.conf import settings
 from products.models import ProductsList
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.http.response import HttpResponse
+from users.models import Profile
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -109,6 +110,11 @@ def stripe_webhook(request):
                 order_details.save()
 
                 order_items = OrderItems.objects.filter(order=order_details)
+                order_address = OrderAddress.objects.get(order=order_details)
+                profile_obj = Profile.objects.get(id=2)
+                order_address.full_name = profile_obj.full_name
+                order_address.save()
+                # print(order_items)
                 for order_item in order_items:
                                         
                                 if not ProductsList.objects.filter(product=order_item.product, user_id=user).exists(): # check if an entry with the product_id and user_id not found in table
@@ -116,17 +122,10 @@ def stripe_webhook(request):
                                                 product = order_item.product,
                                                 user_id = user)
                                                 product_list_insert.save()
+
                 line_items = session.line_items
                 # Fulfill the purchase...
                 print(session)
                 context = {'order_details': order_details}
                 return render(request, 'orders/order_history.html', context) # render the order_history.html template for order paid
         return HttpResponse(status=200) # if checkout session completed successful return status 200
-
-
-
-
-    
-
-
-
