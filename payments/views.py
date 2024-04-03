@@ -2,7 +2,7 @@ import stripe
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from cart.models import Cart, CartItem
 from cart.views import _cart_id
 from orders.models import Order, OrderItems
@@ -17,62 +17,59 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 @login_required
 def checkout(request, pk): 
-    
-    
-#     cart = Cart.objects.get(cart_id=_cart_id(request)) #retrieving the cart session
-#     print(cart)
-#     cart_items = CartItem.objects.filter(cart=cart) #retrieving the cart items
-#     print(cart_items)
-    
-    order = Order.objects.get(id=pk)
-    
-    order_items = OrderItems.objects.filter(order=order)
 
-    line_items = []
+    get_order = get_object_or_404(Order, pk=pk) # gets the order if it exists
+
+    if get_order.created_by == request.user: # creates a checkout session if the order owner is equal to requesting user
+        order = Order.objects.get(id=pk)
+        
+        order_items = OrderItems.objects.filter(order=order)
+
+        line_items = []
+                        
+        for order_item in order_items:
+                                testval = order_item.discount_price.amount
+                                print(testval)
+                                unit_amount = (order_item.price.amount - testval) * 100
+                                unit_amount = int(unit_amount)
+                                print(type(unit_amount))
+                                print(order_item.product.id)
+
+                                line_items.append({
+                                        'price_data': {
+                                                'currency': 'usd',
+                                                'unit_amount': unit_amount,
+                                                'product_data': {
+                                                        'name': order_item.product,
+                                                        
+                                                        # add images in the future, unable at the moment as stripe is unable to access local django server
                 
-    for order_item in order_items:
-                        testval = order_item.discount_price.amount
-                        print(testval)
-                        unit_amount = (order_item.price.amount - testval) * 100
-                        unit_amount = int(unit_amount)
-                        print(type(unit_amount))
-                        print(order_item.product.id)
-
-                        # product_list_insert = ProductsList.objects.create(
-                        #         product = order_item.product
-                        # )
-                        # product_list_insert.save()
-                        line_items.append({
-                                'price_data': {
-                                        'currency': 'usd',
-                                        'unit_amount': unit_amount,
-                                        'product_data': {
-                                                'name': order_item.product,
-                                                
-                                                # add images in the future, unable at the moment as stripe is unable to access local django server
-            
+                                                },
                                         },
+                                        'quantity': order_item.quantity
+                                }),
+                                
+                                
+                                
+        checkout_session = stripe.checkout.Session.create(
+                        line_items=line_items,
+                        payment_method_types=['card'],
+                        mode='payment',
+                        success_url=settings.SITE_URL,
+                        
+                        metadata={
+                                        "order_id": pk,
+                                        "user_id": request.user.id # get the request user id from metadata
                                 },
-                                'quantity': order_item.quantity
-                        }),
+                        cancel_url=settings.SITE_URL + '/orders/{}'.format(pk)
                         
-                        
-                        
-    checkout_session = stripe.checkout.Session.create(
-                line_items=line_items,
-                payment_method_types=['card'],
-                mode='payment',
-                success_url=settings.SITE_URL,
-                
-                metadata={
-                                "order_id": pk,
-                                "user_id": request.user.id
-                        },
-                cancel_url=settings.SITE_URL + '/orders/{}'.format(pk)
-                
-            )
-    
-    return redirect(checkout_session.url, code=303)
+                )
+        
+        
+        
+        return redirect(checkout_session.url, code=303)
+    else: # returns the user to order_history if order owner is not requesting user
+        return redirect('orders:order_history')
 
 @csrf_exempt
 def stripe_webhook(request):
@@ -88,10 +85,10 @@ def stripe_webhook(request):
                 )
                 
         except ValueError as e:
-        # Invalid payload
+        # Invalid payload returns status 400
                 return HttpResponse(status=400)
         except stripe.error.SignatureVerificationError as e:
-        # Invalid signature
+        # Invalid signature returns status 400
                 return HttpResponse(status=400)
 
         # Passed signature verification
@@ -103,8 +100,9 @@ def stripe_webhook(request):
                 )
                 
                 order_id = session["metadata"]["order_id"]
-                user = session["metadata"]["user_id"]
+                user = session["metadata"]["user_id"] # retrieve the request user id from the session
                 order_details = Order.objects.get(id=order_id)
+
                 print(order_details)
                 order_details.paid = True
            
@@ -113,19 +111,17 @@ def stripe_webhook(request):
                 order_items = OrderItems.objects.filter(order=order_details)
                 for order_item in order_items:
                                         
-                                # if not ProductsList.objects.filter(product=order_item.product).exists():
-                                                product_list_insert = ProductsList.objects.create(
+                                if not ProductsList.objects.filter(product=order_item.product, user_id=user).exists(): # check if an entry with the product_id and user_id not found in table
+                                                product_list_insert = ProductsList.objects.create( # if not found create an object in ProductsList table
                                                 product = order_item.product,
-                                                user_id = user
-                                 
-                                                )
+                                                user_id = user)
                                                 product_list_insert.save()
                 line_items = session.line_items
                 # Fulfill the purchase...
                 print(session)
                 context = {'order_details': order_details}
                 return render(request, 'orders/order_history.html', context) # render the order_history.html template for order paid
-        return HttpResponse(status=200)
+        return HttpResponse(status=200) # if checkout session completed successful return status 200
 
 
 

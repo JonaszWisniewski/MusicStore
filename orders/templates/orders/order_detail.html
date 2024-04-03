@@ -35,7 +35,7 @@
             {% for order_item in order.get_items %}
             <tr>
             
-                <td>{{order_item.product}}</td>
+                <td><a href="{% url 'products:detail' order_item.product.id %}">{{order_item.product}}</a></td>
                 <td>{{order_item.quantity}}</td>
                 <td>{{order_item.price}}</td>
                 <td>{{order_item.get_cost}}</td>	
@@ -56,18 +56,61 @@
         <a href="{% url 'payments:checkout' order.id %}" class="text-red-900 mt-2">Proceed to checkout</a>
     </div>  
         
-
-<form method="post" action="." enctype="multipart/form-data">
-    {% csrf_token %}
-    
-
+    <div class="bg-gray-100 px-6 py-6">
+        <h1 class="mb-6 text-3xl text-center">Billing details</h1>
+        <form method="post" action="{% url 'orders:detail' order.id %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="columns-2">
+        
+                <div class="mb-2">
+                    <label class="inline-block mb-2 mt-2 font-medium">Full Name: </label>
+                    {{ profileForm.full_name }}
+                </div>
+        
+        
+                <div class="mb-2">
+                    <label class="inline-block mb-2 mt-2 font-medium">Age: </label><br>
+                    {{ profileForm.age }}
+                </div>
+        
+                <div class="mb-2">
+                    <label class="inline-block mb-2 mt-2 font-medium">Address 1: </label>
+                    {{ profileForm.address1 }}
+                </div>
+        
+                <div class="mb-2">
+                    <label class="inline-block mb-2 mt-2 font-medium">Address 2: </label>
+                    {{ profileForm.address2 }}
+                </div>
+        
+                <div class="mb-2">
+                    <label class="inline-block mb-2 mt-2 font-medium">Country: </label>
+                    {{ profileForm.country }}
+                </div>
+        
+                <div class="mb-2">
+                    <label class="inline-block mb-2 mt-2 font-medium">City </label>
+                    {{ profileForm.city }}
+                </div>
+        
+                <div class="mb-2">
+                    <label class="inline-block mb-2 mt-2 font-medium">County</label>
+                    {{ profileForm.county }}
+                </div>
+        
+                <div class="mb-2">
+                    <label class="inline-block mb-2 mt-2 font-medium">Phone</label>
+                    {{ profileForm.phone }}
+                </div>
+    </div>
+    <button class="py-4 mt-5 px-6 text-lg bg-teal-500">Submit</button>
 {% endfor %}
 
 
 
-</form>
+
   
     
-<!-- </form> -->
+
 
 {% endblock %}

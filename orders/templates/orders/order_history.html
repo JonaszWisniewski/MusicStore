@@ -34,7 +34,7 @@
 			<tbody>
 				{% for order_item in order.get_items %}
 				<tr>
-					<td>{{order_item.product}}</td>
+					<td><a href="{% url 'products:detail' order_item.product.id %}">{{order_item.product}}</a></td>
 					<td>{{order_item.quantity}}</td>
 					<td>{{order_item.price}}</td>
 					<td>{{order_item.get_cost}}</td>		

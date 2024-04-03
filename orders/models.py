@@ -10,6 +10,13 @@ class Order(models.Model):
     # email = models.EmailField(max_length=64, blank=True)
     created_by = models.ForeignKey(User, related_name='orders', on_delete=models.CASCADE)
     paid = models.BooleanField(default=False)
+    full_name = models.CharField(max_length=64, blank=True)
+    age = models.CharField(max_length=4, blank=False)
+    address1 = models.TextField(max_length=100, blank=True)
+    address2 = models.TextField(max_length=100, blank=True)
+    city = models.CharField(max_length=100, blank=True)
+    county = models.CharField(max_length=30, blank=True)
+    phone = models.IntegerField(null=True)
 
     class Meta:
         ordering = ('-created_date',)
@@ -39,6 +46,16 @@ class Order(models.Model):
     
     def get_items(self):
         return OrderItems.objects.filter(order=self)
+    
+class OrderAddress(models.Model):
+    order = models.ForeignKey(Order, related_name='order_address', on_delete=models.CASCADE)
+    full_name = models.CharField(max_length=64, blank=True)
+    age = models.CharField(max_length=4, blank=False)
+    address1 = models.TextField(max_length=100, blank=True)
+    address2 = models.TextField(max_length=100, blank=True)
+    city = models.CharField(max_length=100, blank=True)
+    county = models.CharField(max_length=30, blank=True)
+    phone = models.IntegerField(null=True)
     
 class OrderItems(models.Model):
     order = models.ForeignKey(Order, related_name='order_items', on_delete=models.CASCADE)

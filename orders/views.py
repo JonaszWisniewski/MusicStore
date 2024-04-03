@@ -36,15 +36,8 @@ def create_order(request, total=0, counter=0, cart_items=None, discount_price=0,
                 counter += order_items.quantity
                 total_discount += (order_items.quantity * order_items.discount_price)
                 
-                
-               
-                
-                
                 order_item.save() # saves the order
 
-                
-                
-            
                 order_items.delete() # clears the basket that existed with items
             
             # for item in cart_items:
@@ -52,8 +45,8 @@ def create_order(request, total=0, counter=0, cart_items=None, discount_price=0,
         except ObjectDoesNotExist:
             pass
         # del request.session['discount_pricee']
-        profileForm = ProfileUpdateForm(instance=request.user.profile)
-        context = {'cart_items': cart_items, 'total': total, 'profileForm': profileForm, 'title': 'My Order', 'counter': counter, 'discount_price': discount_price, 'total_discount': total_discount}
+        # profileForm = ProfileUpdateForm(instance=request.user.profile)
+        context = {'cart_items': cart_items, 'total': total, 'title': 'My Order', 'counter': counter, 'discount_price': discount_price, 'total_discount': total_discount}
         return render(request, 'orders/order.html', context)
 
 @login_required
@@ -95,9 +88,10 @@ def detail(request, pk):
 
     if order_details.created_by == request.user or request.user.is_staff:
         order_details = Order.objects.filter(pk=pk)
+        profileForm = ProfileUpdateForm(instance=request.user.profile)
     
         return render(request, 'orders/order_detail.html', 
-                  {'order_details': order_details, 'title': 'Order {}'.format(pk)})
+                  {'order_details': order_details, 'profileForm': profileForm, 'title': 'Order {}'.format(pk)})
     else:
         return redirect('orders:order_history')
                    
