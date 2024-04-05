@@ -11,13 +11,10 @@ def detail(request, pk):
     ids = []
     uids = []
     ids = [product.product.id for product in bought_product]
-    # uids = [product.user_id for product in bought_product]
 
-    print(ids)
     for x in bought_product:
         uids.append(int(x.user_id))
-    print(uids)
-    print(request.user.id)
+    
     
     related_products = Product.objects.filter(category=product.category, is_sold=False).exclude(pk=pk)[0:5]
     
@@ -31,8 +28,6 @@ def detail(request, pk):
     else:
         form = AddRatingForm()
 
-    
-    
     return render(request, 'products/product_detail.html', 
                   {'product': product,
                    'related_products': related_products, 'form': form, 'ids': ids, 'uids': uids, 'bought_product': bought_product})
@@ -45,7 +40,6 @@ def new_product(request):
         if form.is_valid():
             product = form.save(commit=False)
             product.created_by = request.user
-            print(product)
             product.save()
             
 

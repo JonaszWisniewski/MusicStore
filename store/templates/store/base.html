@@ -22,14 +22,26 @@
           </button>
           <div class="hidden w-full md:block md:w-auto" id="navbar-default">
             <ul class="font-medium flex flex-col p-4 md:p-0 mt-4 md:flex-row md:space-x-8">
+              <li class="">
+                <form method="GET" >
+                  <label class="relative flex w-auto grow rounded text-gray-400 focus-within:text-gray-600 w-full">
+                    <button class="btn" type="submit" name="action">
+                    <img src="https://img.icons8.com/cotton/452/search--v2.png" class="pointer-events-none absolute top-1/2 left-1 h-6 w-6 -translate-y-1/2 transform" width="25" height="25" />
+                    </button>
+                    <input type="text" name="q" placeholder="Search" value="{{ request.GET.q }}" class="px-8 form-input w-full rounded border border-gray-400 bg-white py-1 pl-8 text-sm text-gray-500 placeholder-gray-400 focus:border-cyan-600 focus:outline-none xxs:pr-4" />
+                    
+                  </label>
+              </form>
+              </li>
+              
               <li>
                 <a href="{% url 'orders:order_history' %}" class="block py-2 px-3 text-white rounded md:bg-transparent md:text-white-700 md:p-0 dark:text-white md:dark:text-white" aria-current="page">Order History</a>
               </li>
               <li>
                 <a href="{% url 'cart:view_cart' %}" class="block py-2 px-3 text-white rounded md:bg-transparent md:text-white-700 md:p-0 dark:text-white md:dark:text-white">View My Cart {% if item_count > 0 %} ({{ item_count }}) {% endif %}</a>
               </li>
-              <li>
-                <a href="{% url 'store:contact' %}" class="block py-2 px-3 text-white rounded md:bg-transparent md:text-white-700 md:p-0 dark:text-white md:dark:text-white">Contact Us</a>
+                
+              <a href="{% url 'store:contact' %}" class="block py-2 px-3 text-white rounded md:bg-transparent md:text-white-700 md:p-0 dark:text-white md:dark:text-white">Contact Us</a>
               </li>
               {% if request.user.is_authenticated %}
               <li>
@@ -42,7 +54,7 @@
                 <a href="{% url 'users:logout' %}" class="block py-2 px-3 text-white rounded md:bg-transparent md:text-white-700 md:p-0 dark:text-white md:dark:text-white">Log Out</a>
               </li>
               {% else %}
-
+              
               <li>
                 <a href="{% url 'users:signup' %}" class="block py-2 px-3 text-white rounded md:bg-transparent md:text-white-700 md:p-0 dark:text-white md:dark:text-white">Sign Up</a>
               </li>
@@ -51,6 +63,7 @@
                 <a href="{% url 'users:login' %}" class="block py-2 px-3 text-white rounded md:bg-transparent md:text-white-700 md:p-0 dark:text-white md:dark:text-white">Log In</a>
               </li>
               {% endif %}
+              
             </ul>
           </div>
         </div>

@@ -30,8 +30,11 @@ class Product(models.Model):
     is_sold = models.BooleanField(default=False) # default the item to be marked as not sold
     create_date = models.DateField(auto_now_add=True) # automatically adds in the date when its created
     created_by = models.ForeignKey(User, related_name='products', on_delete=models.CASCADE)
+    
+    class Meta:
+        ordering = ('id',) # orders according to which product was added first
 
-    def __str__(self): # overwrites the name given in line 16
+    def __str__(self):
         return self.name
     
     def save(self, *args, **kwargs):

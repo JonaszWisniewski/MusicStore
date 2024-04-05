@@ -5,5 +5,47 @@ Contact
 {% endblock %}
 
 {% block content %}
-        <h2>The contact page</h2
+        <h2>The contact page</h2>
+        <form method="GET" >
+                <div class="input-field">
+                    <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Search Here...">
+                   <button class="btn" type="submit" name="action">Search</button>
+                </div>
+            </form>
+
+        {% for post in list_of_prods %}
+
+                <span class="meta">Posted on: {{ post.name }}</span>
+                <h3 class="title">{{ post.description }}</h3>
+                <p>{{ post.price }}</p>
+
+        {% endfor %}
+
+        {% if list_of_prods.has_other_pages %}
+        <ul class="pagination">
+        {% if list_of_prods.has_previous %}
+            <li class="waves-effect"><a href="?page=
+                    {{ posts.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"><i
+                    class="material-icons">chevron_left</i></a></li>
+        {% else %}
+            <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+        {% endif %}
+        {% for num in list_of_prods.paginator.page_range %}
+            {% if list_of_prods.number == num %}
+                <li class="active"><a href="#!">{{ num }}</a></li>
+            {% else %}
+                <li class="waves-effect"><a
+                        href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ num }}</a></li>
+            {% endif %}
+        {% endfor %}
+        {% if list_of_prods.has_next %}
+            <li class="waves-effect"><a
+                    href="?page={{ list_of_prods.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"><i
+                    class="material-icons">chevron_right</i></a></li>
+        {% else %}
+            <li class="disabled"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+        {% endif %}
+    </ul>
+{% endif %}
+                
 {% endblock %}
