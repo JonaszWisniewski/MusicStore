@@ -25,8 +25,13 @@ class SignUpForm(UserCreationForm):
                 'class': var_class
             })}
         
-    password1 = forms.CharField(widget=forms.TextInput(attrs={'class': var_class}))  
-    password2 = forms.CharField(widget=forms.TextInput(attrs={'class': var_class}))
+    def __init__(self, *args, **kwargs): # function to make password1 and password2 hide the password
+            super(UserCreationForm, self).__init__(*args, **kwargs)
+            self.fields['password1'].widget = forms.TextInput(attrs={'class': var_class,
+                                                                        'type': 'password'})
+            self.fields['password2'].widget = forms.TextInput(attrs={'class': var_class,
+                                                                        'type': 'password'}) 
+        
     age = forms.CharField(widget=forms.TextInput(attrs={'class': var_class}))  
     country = forms.CharField(widget=forms.TextInput(attrs={'class': var_class}))
         

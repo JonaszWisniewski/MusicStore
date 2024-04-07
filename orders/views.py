@@ -1,5 +1,4 @@
 from datetime import datetime, timezone
-import decimal
 from django.shortcuts import render, redirect, get_object_or_404
 from users.forms import ProfileUpdateForm
 from .models import Order, OrderItems, OrderAddress
@@ -10,6 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
 from django.core.paginator import Paginator
 from products.models import Coupon
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 @login_required
 def create_order(request, total=0, counter=0, cart_items=None, discount_price=0, total_discount=0):
@@ -32,8 +32,6 @@ def create_order(request, total=0, counter=0, cart_items=None, discount_price=0,
                     discount_price = order_items.discount_price, #pulls the discount price from the cart
                     order = order_details)
                 
-            
-                
                 total += (order_items.quantity * order_items.product.price)
                 counter += order_items.quantity
                 total_discount += (order_items.quantity * order_items.discount_price)
@@ -47,30 +45,43 @@ def create_order(request, total=0, counter=0, cart_items=None, discount_price=0,
                 )
                 order_address.save()
             
-            # for item in cart_items:
-            #     discount_price = item.discount_price   
         except ObjectDoesNotExist:
             pass
-        # del request.session['discount_pricee']
         # profileForm = ProfileUpdateForm(instance=request.user.profile)
         context = {'cart_items': cart_items, 'total': total, 'title': 'My Order', 'counter': counter, 'discount_price': discount_price, 'total_discount': total_discount}
         return render(request, 'orders/order.html', context)
 
 @login_required
 def order_history(request):
-    if request.user.is_authenticated:
-        # email = str(request.user.email)
-        order_details = Order.objects.filter(created_by=request.user)
+    # if request.user.is_authenticated:
+    #     # email = str(request.user.email)
+    #     order_details = Order.objects.filter(created_by=request.user)
 
-        page = Paginator(order_details, 3)
+    #     page = Paginator(order_details, 3)
 
-        page_list = request.GET.get('page')
+    #     page_list = request.GET.get('page')
       
+    #     page = page.get_page(page_list)
 
-        page = page.get_page(page_list)
+    #     context = {'page': page, 'title': 'All Orders'}
 
-        context = {'page': page, 'title': 'All Orders'}
+    if request.user.is_authenticated:
+        email = str(request.user.email)
+        order_details = Order.objects.filter(created_by=request.user)
+        paginator = Paginator(order_details, 3)
+        page = request.GET.get('page')
 
+        try:
+            order_details = paginator.page(page)
+        except PageNotAnInteger:
+            if order_details:
+                order_details = paginator.page(1)
+        
+        except EmptyPage:
+            order_details = paginator.page(paginator.num_pages)
+
+
+        context = {'order_details': order_details, 'title': 'All Orders'}
     return render(request, 'orders/order_history.html', context)
 
 @login_required

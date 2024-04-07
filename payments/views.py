@@ -104,7 +104,6 @@ def stripe_webhook(request):
                 user = session["metadata"]["user_id"] # retrieve the request user id from the session
                 order_details = Order.objects.get(id=order_id)
 
-                print(order_details)
                 order_details.paid = True
            
                 order_details.save()
@@ -126,6 +125,6 @@ def stripe_webhook(request):
                 line_items = session.line_items
                 # Fulfill the purchase...
                 print(session)
-                context = {'order_details': order_details}
-                return render(request, 'orders/order_history.html', context) # render the order_history.html template for order paid
+                # context = {'order_details': order_details}
+                return render(request, 'orders/order_history.html') # render the order_history.html template for order paid
         return HttpResponse(status=200) # if checkout session completed successful return status 200

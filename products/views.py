@@ -3,6 +3,7 @@ from .forms import AddRatingForm, NewProductForm, EditProductForm
 from .models import Product, ProductsList
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 
 def detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
@@ -15,16 +16,19 @@ def detail(request, pk):
     for x in bought_product:
         uids.append(int(x.user_id))
     
-    
+    # user_rating = Product.objects.filter(id=pk, created_by_id=user, rating__isnull=False)
     related_products = Product.objects.filter(category=product.category, is_sold=False).exclude(pk=pk)[0:5]
     
     if request.method == 'POST':
         form = AddRatingForm(request.POST, instance=product)
+
+        # if user_rating:
+        #     raise PermissionDenied('You already left a rating')
+        
         if form.is_valid():
             rating = form.save(commit=False)
             rating.save()
             return redirect('products:detail', pk=product.id)
-           
     else:
         form = AddRatingForm()
 

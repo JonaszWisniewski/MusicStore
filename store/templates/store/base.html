@@ -22,8 +22,8 @@
           </button>
           <div class="hidden w-full md:block md:w-auto" id="navbar-default">
             <ul class="font-medium flex flex-col p-4 md:p-0 mt-4 md:flex-row md:space-x-8">
-              <li class="">
-                <form method="GET" >
+              <li>
+                <form method="GET" action="{% url 'store:index' %}">
                   <label class="relative flex w-auto grow rounded text-gray-400 focus-within:text-gray-600 w-full">
                     <button class="btn" type="submit" name="action">
                     <img src="https://img.icons8.com/cotton/452/search--v2.png" class="pointer-events-none absolute top-1/2 left-1 h-6 w-6 -translate-y-1/2 transform" width="25" height="25" />
@@ -82,8 +82,7 @@
     {% endblock %}
     </div>
 
-  
-</body>
 
+</body>
 
 </html>

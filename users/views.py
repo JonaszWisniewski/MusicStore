@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import logout
+from django.contrib.auth import authenticate, login, logout
 from users.forms import SignUpForm, UserUpdateForm, ProfileUpdateForm, PasswordForm
 from .models import Profile
 from django.contrib import messages
@@ -12,12 +12,16 @@ def sign_up(request):
             username = form.cleaned_data.get('username')
             user = form.save() # saves into the database if the form is valid
             messages.success(request, f'Successfully created an account for {username}')
+            user = authenticate(username=form.cleaned_data['username'],
+                                    password=form.cleaned_data['password1'],
+                                    )
+            login(request, user)
             age = form.cleaned_data.get('age')
             country =form.cleaned_data.get('country')
             Profile.objects.create(user=user, age=age, country=country)
 
 
-            return redirect('users:login')
+            return redirect('store:index')
     else:
         form = SignUpForm() # use empty form if its not post
 
