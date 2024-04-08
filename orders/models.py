@@ -58,6 +58,7 @@ class OrderAddress(models.Model):
     city = models.CharField(max_length=100, blank=True)
     county = models.CharField(max_length=30, blank=True)
     phone = models.IntegerField(null=True)
+    country = models.CharField(max_length=30, blank=True)
 
     
 class OrderItems(models.Model):

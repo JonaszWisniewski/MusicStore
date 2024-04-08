@@ -21,9 +21,10 @@ def checkout(request, pk):
 
     get_order = get_object_or_404(Order, pk=pk) # gets the order if it exists
 
-    if get_order.created_by == request.user: # creates a checkout session if the order owner is equal to requesting user
+    if get_order.created_by == request.user and get_order.paid==False: # creates a checkout session if the order owner is equal to requesting user and order hasn't been paid for
         order = Order.objects.get(id=pk)
-        
+        a = request.user.profile.id
+        print(request.user.profile.id)
         order_items = OrderItems.objects.filter(order=order)
 
         line_items = []
@@ -60,7 +61,8 @@ def checkout(request, pk):
                         
                         metadata={
                                         "order_id": pk,
-                                        "user_id": request.user.id # get the request user id from metadata
+                                        "user_id": request.user.id, # get the request user id from metadata
+                                        "profile_id": request.user.profile.id
                                 },
                         cancel_url=settings.SITE_URL + '/orders/{}'.format(pk)
                         
@@ -101,19 +103,27 @@ def stripe_webhook(request):
                 )
                 
                 order_id = session["metadata"]["order_id"]
-                user = session["metadata"]["user_id"] # retrieve the request user id from the session
+                user = session["metadata"]["user_id"]
+                profile_id = session["metadata"]["profile_id"] # retrieve the request user id from the session
                 order_details = Order.objects.get(id=order_id)
 
                 order_details.paid = True
            
                 order_details.save()
 
-                order_items = OrderItems.objects.filter(order=order_details)
+
                 order_address = OrderAddress.objects.get(order=order_details)
-                profile_obj = Profile.objects.get(id=2)
+                profile_obj = Profile.objects.get(id=profile_id)
                 order_address.full_name = profile_obj.full_name
+                order_address.address1 = profile_obj.address1
+                order_address.address2 = profile_obj.address2
+                order_address.city = profile_obj.city
+                order_address.county = profile_obj.county
+                order_address.phone = profile_obj.phone
+                order_address.country = profile_obj.country
                 order_address.save()
-                # print(order_items)
+
+                order_items = OrderItems.objects.filter(order=order_details)
                 for order_item in order_items:
                                         
                                 if not ProductsList.objects.filter(product=order_item.product, user_id=user).exists(): # check if an entry with the product_id and user_id not found in table

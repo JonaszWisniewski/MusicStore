@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
-from users.forms import SignUpForm, UserUpdateForm, ProfileUpdateForm, PasswordForm
+from users.forms import LoginForm, SignUpForm, UserUpdateForm, ProfileUpdateForm, PasswordForm
 from .models import Profile
 from django.contrib import messages
 
@@ -29,8 +29,33 @@ def sign_up(request):
     context = {'form': form}
     return render(request, 'users/signup.html', context)
 
+def loginview(request):
+
+    if request.method == 'POST':
+        form = LoginForm(request=request, data=request.POST)
+        if form.is_valid():
+            username=form.cleaned_data['username']
+            user = authenticate(username=form.cleaned_data['username'],
+                                    password=form.cleaned_data['password'],
+                                    )
+            if user is not None:
+                login(request, user)
+                messages.success(request, f'Successfully logged in as {username}')
+
+                if 'next' in request.POST:
+                    return redirect(request.POST.get('next'))
+                else:
+                    return redirect('store:index')
+
+            
+    else:
+        form = LoginForm()
+    context = {'form': form}
+    return render(request, 'users/login.html', context)
+
 def logout_view(request):
     logout(request)
+    messages.success(request, f'Successfully logged out')
     return redirect('/')
 
 
@@ -46,7 +71,6 @@ def profile(request):
             profileForm.save()
             messages.success(request, f'Your account information has been successfully updated!')
             return redirect('users:profile')
-
     else:
         userForm = UserUpdateForm(instance=request.user)
         profileForm = ProfileUpdateForm(instance=request.user.profile)

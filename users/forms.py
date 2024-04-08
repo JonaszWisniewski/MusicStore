@@ -8,6 +8,15 @@ var_class = "w-full rounded-xl py-3 px-5"
 class LoginForm(AuthenticationForm):
     class Meta:
         model = User
+        fields = ['username', 'password1']
+
+
+
+    def __init__(self, *args, **kwargs):
+        super(LoginForm, self).__init__(*args, **kwargs)
+        self.fields['username'].widget = forms.TextInput(attrs={'class': var_class})
+        self.fields['password'].widget = forms.TextInput(attrs={'class': var_class,
+                                                                     'type': 'password'})
       
 
 class SignUpForm(UserCreationForm):
