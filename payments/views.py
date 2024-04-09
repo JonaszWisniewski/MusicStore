@@ -111,7 +111,6 @@ def stripe_webhook(request):
            
                 order_details.save()
 
-
                 order_address = OrderAddress.objects.get(order=order_details)
                 profile_obj = Profile.objects.get(id=profile_id)
                 order_address.full_name = profile_obj.full_name

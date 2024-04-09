@@ -7,13 +7,17 @@ from products.models import Category, Product
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 def index(request):
-
+    cat_id = request.GET.get('category_id')
+    print(cat_id)
     list_of_prods = Product.objects.filter(is_sold=False)
     query = request.GET.get('q') # gets the user input from the search
     if query: 
         list_of_prods = Product.objects.filter(
             Q(name__icontains=query) | Q(price__icontains=query) |
             Q(category__name__icontains=query))
+        
+    if cat_id:
+        list_of_prods = Product.objects.filter(category=cat_id)
 
     categories = Category.objects.all()    
     paginator = Paginator(list_of_prods, 2) # 6 posts per page

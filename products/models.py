@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from PIL import Image
+from django.urls import reverse
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
 from django.core.validators import MinValueValidator, MaxValueValidator
