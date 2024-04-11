@@ -53,18 +53,6 @@ def create_order(request, total=0, counter=0, cart_items=None, discount_price=0,
 
 @login_required
 def order_history(request):
-    # if request.user.is_authenticated:
-    #     # email = str(request.user.email)
-    #     order_details = Order.objects.filter(created_by=request.user)
-
-    #     page = Paginator(order_details, 3)
-
-    #     page_list = request.GET.get('page')
-      
-    #     page = page.get_page(page_list)
-
-    #     context = {'page': page, 'title': 'All Orders'}
-
     if request.user.is_authenticated:
         email = str(request.user.email)
         order_details = Order.objects.filter(created_by=request.user)
@@ -101,11 +89,22 @@ def cancel_order(request, order_id):
 
 @login_required
 def detail(request, pk):
-    
     order_details = get_object_or_404(Order, pk=pk)
 
     if order_details.created_by == request.user or request.user.is_staff:
         order_details = Order.objects.filter(pk=pk)
+        is_default = request.POST.getlist('is_default')
+        if is_default == []:
+            is_default = False
+        if is_default == ['True']:
+            is_default = True
+
+        order_details.is_default = is_default
+      
+        order_default = Order.objects.get(pk=pk)
+        order_default.is_default = is_default
+        print(order_default.is_default)
+        order_default.save()
         profileForm = ProfileUpdateForm(instance=request.user.profile)
 
     
@@ -114,7 +113,23 @@ def detail(request, pk):
     else:
         return redirect('orders:order_history')
                    
+# def detail(request, pk): # saves into profile information
+#     order_details = get_object_or_404(Order, pk=pk)
+#     if order_details.created_by == request.user or request.user.is_staff:
+#             order_details = Order.objects.filter(pk=pk)
 
+#             if request.method == 'POST':
+#                 profileForm = ProfileUpdateForm(request.POST, instance=request.user.profile)
+#                 if profileForm.is_valid():
+#                     profileForm.save()
+#             else:
+#                 profileForm = ProfileUpdateForm(instance=request.user.profile)
+
+
+#             return render(request, 'orders/order_detail.html', 
+#                         {'order_details': order_details, 'profileForm': profileForm, 'title': 'Order {}'.format(pk)})
+#     else:
+#         return redirect('orders:order_history')
 
 
 

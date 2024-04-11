@@ -113,14 +113,24 @@ def stripe_webhook(request):
 
                 order_address = OrderAddress.objects.get(order=order_details)
                 profile_obj = Profile.objects.get(id=profile_id)
-                order_address.full_name = profile_obj.full_name
-                order_address.address1 = profile_obj.address1
-                order_address.address2 = profile_obj.address2
-                order_address.city = profile_obj.city
-                order_address.county = profile_obj.county
-                order_address.phone = profile_obj.phone
-                order_address.country = profile_obj.country
-                order_address.save()
+                if order_details.is_default:
+                        order_address.full_name = profile_obj.full_name
+                        order_address.address1 = profile_obj.address1
+                        order_address.address2 = profile_obj.address2
+                        order_address.city = profile_obj.city
+                        order_address.county = profile_obj.county
+                        order_address.phone = profile_obj.phone
+                        order_address.country = profile_obj.country
+                        order_address.save()
+                else:
+                        order_address.full_name = "Tymoteusz"
+                        order_address.address1 = "Address1"
+                        order_address.address2 = "Address2"
+                        order_address.city = "Cannes"
+                        order_address.county = ""
+                        order_address.phone = "123"
+                        order_address.country = profile_obj.country
+                        order_address.save()
 
                 order_items = OrderItems.objects.filter(order=order_details)
                 for order_item in order_items:

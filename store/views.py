@@ -8,7 +8,6 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 def index(request):
     cat_id = request.GET.get('category_id')
-    print(cat_id)
     list_of_prods = Product.objects.filter(is_sold=False)
     query = request.GET.get('q') # gets the user input from the search
     if query: 
@@ -20,7 +19,7 @@ def index(request):
         list_of_prods = Product.objects.filter(category=cat_id)
 
     categories = Category.objects.all()    
-    paginator = Paginator(list_of_prods, 2) # 6 posts per page
+    paginator = Paginator(list_of_prods, 2) # 2 products per page
     page = request.GET.get('page')
 
     try:
@@ -35,7 +34,6 @@ def index(request):
 
     return render(request, 'store/index.html', {'categories': categories,
                                                 'list_of_prods': list_of_prods
-                                               
                                                 })
 
 def contact(request):

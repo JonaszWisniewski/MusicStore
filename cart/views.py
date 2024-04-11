@@ -122,19 +122,3 @@ def clear_cart(request):
 	for cart_item in cart_items:
 		cart_item.delete()
 	return redirect('cart:view_cart')
-
-
-# @login_required
-# def checkout(request, total=0, counter=0, cart_items = None):
-# 	try:
-# 		cart = Cart.objects.get(cart_id=_cart_id(request))
-# 		cart_items = CartItem.objects.filter(cart=cart)
-# 		for cart_item in cart_items:
-# 			total += (cart_item.product.price * cart_item.quantity)
-# 			counter += cart_item.quantity
-# 	except ObjectDoesNotExist:
-# 		pass
-	
-# 	profileForm = ProfileUpdateForm(instance=request.user.profile)
-# 	context = {'cart_items': cart_items, 'total': total, 'counter': counter, 'title': 'Checkout', 'profileForm': profileForm}
-# 	return render(request, 'cart/checkout.html', context)

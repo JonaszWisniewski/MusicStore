@@ -7,7 +7,7 @@ from PIL import Image
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     age = models.CharField(max_length=4, blank=False)
-    country = models.CharField(max_length=30, blank=False)
+    country = models.CharField(max_length=30, blank=True)
     address1 = models.TextField(max_length=100, blank=True)
     address2 = models.TextField(max_length=100, blank=True)
     city = models.CharField(max_length=100, blank=True)

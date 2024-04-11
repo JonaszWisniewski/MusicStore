@@ -17,6 +17,7 @@ class Order(models.Model):
     address2 = models.TextField(max_length=100, blank=True)
     city = models.CharField(max_length=100, blank=True)
     county = models.CharField(max_length=30, blank=True)
+    is_default = models.BooleanField(default=False)
     phone = models.IntegerField(null=True)
 
     class Meta:
