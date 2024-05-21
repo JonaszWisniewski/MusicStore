@@ -4,6 +4,7 @@ from users.forms import ProfileUpdateForm
 from .models import Order, OrderItems, OrderAddress
 from cart.models import Cart, CartItem
 from cart.views import _cart_id
+from orders.forms import AddressUpdateForm
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
@@ -22,7 +23,8 @@ def create_order(request, total=0, counter=0, cart_items=None, discount_price=0,
             
             if cart_items:
                 order_details = Order.objects.create(created_by=request.user)
-                order_details.save()
+                order_details.save() # returns the id of the order
+
 
             for order_items in cart_items:
                 order_item = OrderItems.objects.create(
@@ -39,11 +41,11 @@ def create_order(request, total=0, counter=0, cart_items=None, discount_price=0,
 
                 order_items.delete() # clears the basket that existed with items
 
-                order_address = OrderAddress.objects.create(
-                order = order_details,
-                profile = request.user.profile
-                )
-                order_address.save()
+                # order_address = OrderAddress.objects.create(
+                # order = order_details,
+                # profile = request.user.profile
+                # )
+                # order_address.save()
             
         except ObjectDoesNotExist:
             pass
@@ -93,8 +95,9 @@ def detail(request, pk):
 
     if order_details.created_by == request.user or request.user.is_staff:
         order_details = Order.objects.filter(pk=pk)
+        get_order_id = Order.objects.get(pk=pk)
         is_default = request.POST.getlist('is_default')
-        if is_default == []:
+        if not is_default:
             is_default = False
         if is_default == ['True']:
             is_default = True
@@ -106,10 +109,19 @@ def detail(request, pk):
         print(order_default.is_default)
         order_default.save()
         profileForm = ProfileUpdateForm(instance=request.user.profile)
-
+        if request.method == 'POST':
+            orderForm = AddressUpdateForm(request.POST)
+            testing123 = orderForm.save(commit=False)
+            testing123.order_id = pk
+            testing123.created_by_id = request.user.id
+            if not Order.objects.filter(id=pk, created_by_id=request.user.id).exists():
+                testing123.save()
+                
+        else:
+            orderForm = AddressUpdateForm()
     
         return render(request, 'orders/order_detail.html', 
-                  {'order_details': order_details, 'profileForm': profileForm, 'title': 'Order {}'.format(pk)})
+                  {'order_details': order_details, 'orderForm': orderForm, 'profileForm': profileForm, 'title': 'Order {}'.format(pk)})
     else:
         return redirect('orders:order_history')
                    

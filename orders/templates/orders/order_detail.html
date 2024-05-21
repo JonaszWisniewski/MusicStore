@@ -113,6 +113,54 @@
                 </div>
                 
     </div>
+    </div>
+    <div class="bg-gray-100 px-6 py-6">
+        <h1 class="mb-6 text-3xl text-center">Order billing address</h1>
+        
+            <div class="columns-2">
+        
+                <div class="mb-2">
+                    <label class="inline-block mb-2 mt-2 font-medium">Full Name: </label>
+                    {{ orderForm.full_name }}
+                </div>
+        
+        
+                <div class="mb-2">
+                    <label class="inline-block mb-2 mt-2 font-medium">Age: </label><br>
+                    {{ orderForm.age }}
+                </div>
+        
+                <div class="mb-2">
+                    <label class="inline-block mb-2 mt-2 font-medium">Address 1: </label>
+                    {{ orderForm.address1 }}
+                </div>
+        
+                <div class="mb-2">
+                    <label class="inline-block mb-2 mt-2 font-medium">Address 2: </label>
+                    {{ orderForm.address2 }}
+                </div>
+        
+                <div class="mb-2">
+                    <label class="inline-block mb-2 mt-2 font-medium">Country: </label>
+                    {{ orderForm.country }}
+                </div>
+        
+                <div class="mb-2">
+                    <label class="inline-block mb-2 mt-2 font-medium">City </label>
+                    {{ orderForm.city }}
+                </div>
+        
+                <div class="mb-2">
+                    <label class="inline-block mb-2 mt-2 font-medium">County</label>
+                    {{ orderForm.county }}
+                </div>
+        
+                <div class="mb-2">
+                    <label class="inline-block mb-2 mt-2 font-medium">Phone</label>
+                    {{ orderForm.phone }}
+                </div>
+                
+    </div>
     <button class="py-4 mt-5 px-6 text-lg bg-teal-500">Submit</button>
 </form>
 {% endfor %}

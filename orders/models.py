@@ -19,6 +19,7 @@ class Order(models.Model):
     county = models.CharField(max_length=30, blank=True)
     is_default = models.BooleanField(default=False)
     phone = models.IntegerField(null=True)
+    country = models.CharField(max_length=30, blank=True)
 
     class Meta:
         ordering = ('-created_date',)
@@ -54,12 +55,12 @@ class OrderAddress(models.Model):
     profile = models.ForeignKey(Profile, related_name='order_address', on_delete=models.CASCADE)
     full_name = models.CharField(max_length=64, blank=True)
     age = models.CharField(max_length=4, blank=False)
-    address1 = models.TextField(max_length=100, blank=True)
-    address2 = models.TextField(max_length=100, blank=True)
-    city = models.CharField(max_length=100, blank=True)
+    address1 = models.TextField(max_length=100, blank=False)
+    address2 = models.TextField(max_length=100, blank=False)
+    city = models.CharField(max_length=100, blank=False)
     county = models.CharField(max_length=30, blank=True)
-    phone = models.IntegerField(null=True)
-    country = models.CharField(max_length=30, blank=True)
+    phone = models.IntegerField(null=True, blank=False)
+    country = models.CharField(max_length=30, blank=False)
 
     
 class OrderItems(models.Model):
